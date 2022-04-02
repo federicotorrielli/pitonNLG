@@ -27,6 +27,8 @@ class PhraseAnalisys:
 
 
 if __name__ == "__main__":
-    phrase = PhraseAnalisys("The ingredients of the polyjuice potion are: Lacewing flies, Knotgrass and a person's hair.")
+    phrase = PhraseAnalisys(
+        "The ingredients of the polyjuice potion are: Lacewing flies, Knotgrass and a person's hair.")
     from pprint import pprint
+
     pprint(phrase.dependency_tree())
