@@ -16,7 +16,7 @@ class DialogueManager:
     """
 
     def __init__(self):
-        self.memory = []
+        self.memory = []  # TODO: add a memory of the previous phrases
         self.current_frame = {}
         self.current_grade = 0
         self.current_comment = ""
