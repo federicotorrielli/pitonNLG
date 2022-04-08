@@ -1,6 +1,8 @@
 from knowledge_base import *
 import potion
 import random
+import analisys
+import frame
 
 
 class DialogueManager:
@@ -16,59 +18,117 @@ class DialogueManager:
     - It has to keep memory of the previous phrases told to the DM
     """
 
-    def __init__(self):
+    def __init__(self, max_turns=15):
+        self.max_turns = max_turns
+        self.analized_phrase = None
+        self.current_answer = None
         self.potions = [polyjuice_potion, invisibility_potion, forgetfulness_potion]
-        self.memory = []  # TODO: add a memory of the previous phrases
-        self.current_frame = {}
+        self.current_potion = random.choice(self.potions)
+        self.memory = []
+        self.user_memory = []
+        self.current_frame = frame.Frame(self.current_potion, [])
         self.current_state = "intro"
-        self.current_mental_state = "neutral"
+        self.current_mental_state = random.choices(["neutral", "happy", "angry"], weights=[0.2, 0.1, 0.7])
         self.current_grade = 1
         self.current_comment = ""
-        self.current_potion = None
+        self.turn = 1
+
+    def flow(self):
+        """
+        The main flow of the dialogue manager
+        The dialogue ends when the frame is complete or after a certain number of turns (or time passed)
+        """
+        self.intro()
+        while self.current_state != self.check_ending_condition():
+            self.wait_for_user_input()
+            self.questions()
+            self.turn += 1
+        self.end()
 
     def intro(self):
         """
         Introduce the system
         """
-        print("Hello, I'm Professor Piton.")
-        self.set_mental_state()
+        self.__print_and_mem("Hello, I'm Professor Piton.")
         if self.current_mental_state == "neutral":
-            print(random.choice(neutral_intro_phrases))
+            self.__print_and_mem(random.choice(neutral_intro_phrases))
         elif self.current_mental_state == "happy":
-            print(random.choice(happy_intro_phrases))
+            self.__print_and_mem(random.choice(happy_intro_phrases))
         elif self.current_mental_state == "angry":
-            print(random.choice(angry_intro_phrases))
+            self.__print_and_mem(random.choice(angry_intro_phrases))
         self.current_state = "questions"
+        self.intro_generation()
 
     def questions(self):
         """
         Start the first question about a random potion, expect the first (incomplete,complete) answer
         """
-        self.current_potion = random.choice(self.potions)
+        if self.current_state == "not useful":
+            if self.analized_phrase.is_question:
+                self.__print_and_mem("The only person here that can make the questions is me.")
+            else:
+                self.__print_and_mem("Silence. This is not what you are supposed to say to me.")
+            self.__print_and_mem(self.memory[len(self.memory) - 2])
+        else:
+            ingredients_to_add = []
+            for ingredient in self.analized_phrase.useful_list:
+                if ingredient not in self.current_frame.ingredients:
+                    ingredients_to_add.append(ingredient)
+            self.current_frame.add_ingredients(ingredients_to_add)
+            # TODO: qua dobbiamo generare la frase
+            self.__print_and_mem(self.generate_phrase())
+
+    def __print_and_mem(self, phrase, user=False):
+        """
+        Print the phrase and memorize it
+        """
+        print(phrase)
+        if user:
+            self.user_memory.append(phrase)
+        else:
+            self.memory.append(phrase)
+
+    def intro_generation(self):
         if self.current_mental_state == "neutral":
-            print(f"Tell me the ingredients of the {self.current_potion.get_name()}.\nYou should also tell me about the quantities... But it's up to you.")
+            self.__print_and_mem(
+                f"Tell me the ingredients of the {self.current_potion.get_name()}.\nYou should also tell me about the quantities... But it's up to you.")
         elif self.current_mental_state == "happy":
-            print(f"As you will remember the training we did, the {self.current_potion.get_name()} contains what ingredients?")
-            print(f"I can give you an hint, if you want...")
+            self.__print_and_mem(
+                f"As you will remember the training we did, the {self.current_potion.get_name()} contains what ingredients?")
+            self.__print_and_mem(f"I can give you an hint, if you want...")
         elif self.current_mental_state == "angry":
-            print(f"Give me all the ingredients and the quantities of the {self.current_potion.get_name()}.")
+            self.__print_and_mem(
+                f"Give me all the ingredients and the quantities of the {self.current_potion.get_name()}.")
 
     def hint(self):
         """
         Give a hint about the missing ingredients
         """
-        a_missing_ingredient = random.choice(self.current_potion.get_missing_ingredients(self.current_frame.keys()))
+        a_missing_ingredient = random.choice(self.current_potion.get_missing_ingredients(self.current_frame.ingredients))
         if self.current_mental_state == "happy":
-            print(f"Here is a hint... one of the missing ingredients is: {a_missing_ingredient}")
+            self.__print_and_mem(f"Here is a hint... one of the missing ingredients is: {a_missing_ingredient}")
         elif self.current_mental_state == "neutral":
-            print(random.choice([f"Here is a hint... one of the missing ingredients is: {a_missing_ingredient}",
-                                 "I'm sure you can guess what is missing..."]))
+            self.__print_and_mem(
+                random.choice([f"Here is a hint... one of the missing ingredients is: {a_missing_ingredient}",
+                               "I'm sure you can guess what is missing..."]))
         elif self.current_mental_state == "angry":
-            print("No. I will not.")
+            self.__print_and_mem("No. I will not.")
 
+    def end(self):
+        """
+        Gives the user the grade and the comment
+        """
+        pass
 
-    def set_mental_state(self):
-        """
-        Set the mental state of the DM taken randomly from a string list
-        """
-        self.current_mental_state = random.choices(["neutral", "happy", "angry"], weights=[0.2, 0.1, 0.7])
+    def check_ending_condition(self):
+        # TODO: dovremmo controllare anche magari se l'utente ha detto una cosa del tipo "non so niente..."
+        return self.current_frame.is_complete() or self.turn > self.max_turns
+
+    def wait_for_user_input(self):
+        self.current_answer = input()
+        self.analized_phrase = analisys.PhraseAnalisys(self.current_answer)
+        if self.analized_phrase.check_if_useful(useful_words[self.current_potion.get_name()]):
+            self.current_state = "fill the frame"
+        else:
+            self.current_state = "not useful"
+        self.user_memory.append(self.current_answer)

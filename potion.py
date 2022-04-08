@@ -1,15 +1,15 @@
 class Potion:
     def __init__(self, name, ingredients=None):
         if ingredients is None:
-            ingredients = {}
+            ingredients = []
         self.name = name
         self.ingredients = ingredients
 
-    def add_ingredient(self, ingredient, quantity):
-        self.ingredients[ingredient] = quantity
+    def add_ingredient(self, ingredient):
+        self.ingredients.append(ingredient)
 
     def remove_ingredient(self, ingredient):
-        self.ingredients.pop(ingredient)
+        self.ingredients.remove(ingredient)
 
     def __eq__(self, other):
         return self.name == other.name and self.ingredients == other.ingredients
