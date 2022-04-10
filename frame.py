@@ -5,23 +5,46 @@ from fuzzywuzzy import fuzz
 class Frame:
     def __init__(self, potion: potion.Potion, ingredients=[]):
         self.potion = potion
-        self.ingredients = ingredients
+        self.ingredients = set(ingredients)
+        self.error_ingredients = set([])
+        self.external_ingredients = set([])
         self.is_complete = False
+        self.is_correct = False
         self.number_of_operations_made = 0
 
     def __str__(self):
         return f"{self.potion.name} {self.ingredients}"
 
-    def add_ingredients(self, ingredients):
+    def debug(self):
+        print(f"Frame name:{self.potion.name}= [{self.ingredients}]")
+        print(f"Potion Ingredients: {self.potion.ingredients}")
+        print(f"Errors: {self.error_ingredients}")
+        print(f"External Ingredients: {self.external_ingredients}")
+        print(f"Is complete: {self.is_complete}")
+        print(f"Is correct: {self.is_correct}")
+        print(f"Number of op made: {self.number_of_operations_made}")
+
+    def add_ingredients(self, ingredients, positive: [bool]):
         if not self.check_complete():
-            for ingredient in ingredients:
-                for potion_ingredient in self.potion.ingredients:
-                    if fuzz.ratio(ingredient, potion_ingredient) > 80:
-                        self.ingredients.append(potion_ingredient)
-                        break
+            for count, ingredient in enumerate(ingredients):
+                ingredient = self.__fuzz_ingredient(ingredient)
+                if ingredient in self.potion.ingredients:
+                    if positive[count]:
+                        self.ingredients.add(ingredient)
+                    else:
+                        self.error_ingredients.add(ingredient)
+                else:
+                    if positive[count]:
+                        self.external_ingredients.add(ingredient)
             self.number_of_operations_made += 1
 
+    def __fuzz_ingredient(self, ingredient):
+        for potion_ingredient in self.potion.ingredients:
+            if fuzz.ratio(ingredient, potion_ingredient) > 80:
+                return potion_ingredient
+        return ingredient
+
     def check_complete(self) -> bool:
-        if len(self.ingredients) == len(self.potion.ingredients):
+        if len(self.ingredients) + len(self.error_ingredients) == len(self.potion.ingredients):
             self.is_complete = True
         return self.is_complete

@@ -1,15 +1,17 @@
 import spacy
+from fuzzywuzzy import fuzz
+from knowledge_base import useful_words, useful_unique_words
 
 
 class PhraseAnalisys:
-    def __init__(self, phrase):
+    def __init__(self, phrase: str):
         self.phrase = phrase
         self.nlp = spacy.load("en_core_web_md")  # python -m spacy download en_core_web_md
-        self.doc = self.nlp(self.phrase)
+        self.doc = self.nlp(self.phrase) # TODO: correggere la frase prima di fare nlp
         self.tokenized_phrase = [word.text.lower() for word in self.doc]
         self.is_question = self.check_if_question()
         self.is_useful = False
-        self.polarity = True  # False is negative and True is positive
+        self.polarity = self.check_polarity()  # False is negative and True is positive
         self.useful_list = []
 
     def dependency_tree(self):
@@ -34,9 +36,13 @@ class PhraseAnalisys:
         for m in self.doc.to_json()["tokens"]:
             if m['morph'] == "Polarity=Neg":
                 self.polarity = False
+            elif m['lemma'] == "no" and m['pos'] == "DET" and self.dependency_tree()['no'][1] in self.useful_list:
+                self.polarity = False
+            else:
+                self.polarity = True
         return self.polarity
 
-    def check_if_useful(self, external_useful_list=None):
+    def check_if_useful(self):
         """
         Check if the phrase contains any of the ingredients
         of the potions
@@ -45,9 +51,24 @@ class PhraseAnalisys:
         """
         useful = False
         for word in self.tokenized_phrase:
-            if word in external_useful_list:
+            if word in useful_words:
                 useful = True
                 self.useful_list.append(word)
+            elif self.dependency_tree()[word][0] == "amod" and f"{word} {self.dependency_tree()[word][1]}" in useful_words:
+                useful = True
+                self.useful_list.append(f"{word} {self.dependency_tree()[word][1]}")
+            elif self.dependency_tree()[word][0] == "poss" and f"{word}'s {self.dependency_tree()[word][1]}" in useful_words:
+                useful = True
+                self.useful_list.append(f"{word}'s {self.dependency_tree()[word][1]}")
+            elif self.dependency_tree()[word][0] == "compound":
+                first_word = self.dependency_tree()[word][1]
+                compound_phrase = f"{word} {first_word}"
+                while compound_phrase not in useful_words and self.dependency_tree()[first_word][0] == "compound":
+                    first_word = self.dependency_tree()[first_word][1]
+                    compound_phrase = f"{compound_phrase} {first_word}"
+                if compound_phrase in useful_words:
+                    useful = True
+                    self.useful_list.append(compound_phrase)
         self.is_useful = useful
         return self.is_useful
 
@@ -70,12 +91,20 @@ class PhraseAnalisys:
             dt[word] = (dep, self.tokenized_phrase[head])
         return dt
 
+    def __correct_phrase(self, words):
+        for count, word in enumerate(words):
+            for correct_word in useful_unique_words:
+                if fuzz.ratio(word, correct_word) > 80:
+                    words[count] = correct_word
+        return words
+
 
 if __name__ == "__main__":
-    strin = PhraseAnalisys("There aren't spiders in the potion")
+    strin = PhraseAnalisys("There is boomslan skin in the potion")
     from pprint import pprint
 
-    pprint(strin.doc.to_json())
+    #pprint(strin.doc.to_json())
     pprint(strin.dependency_tree())
     pprint(strin.ner())
+    print(strin.check_if_useful())
     print(strin.check_polarity())

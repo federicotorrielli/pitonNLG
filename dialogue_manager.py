@@ -28,7 +28,7 @@ class DialogueManager:
         self.user_memory = []
         self.current_frame = frame.Frame(self.current_potion, [])
         self.current_state = "intro"
-        self.current_mental_state = random.choices(["neutral", "happy", "angry"], weights=[0.2, 0.1, 0.7])
+        self.current_mental_state = random.choices(["neutral", "happy", "angry"], weights=[0.2, 0.1, 0.7])[0]
         self.current_grade = 1
         self.current_comment = ""
         self.turn = 1
@@ -63,20 +63,22 @@ class DialogueManager:
         """
         Start the first question about a random potion, expect the first (incomplete,complete) answer
         """
-        if self.current_state == "not useful":
-            if self.analized_phrase.is_question:
-                self.__print_and_mem("The only person here that can make the questions is me.")
-            else:
-                self.__print_and_mem("Silence. This is not what you are supposed to say to me.")
-            self.__print_and_mem(self.memory[len(self.memory) - 2])
+        if self.analized_phrase.is_question:
+            self.__print_and_mem("The only person here that can make the questions is me.")
         else:
-            ingredients_to_add = []
-            for ingredient in self.analized_phrase.useful_list:
-                if ingredient not in self.current_frame.ingredients:
+            if self.current_state == "not useful":
+                self.__print_and_mem("Silence. This is not what you are supposed to say to me.")
+                self.__print_and_mem(self.memory[len(self.memory) - 2])
+            else:
+                ingredients_to_add = []
+                bool_list = []
+                for ingredient in self.analized_phrase.useful_list:
                     ingredients_to_add.append(ingredient)
-            self.current_frame.add_ingredients(ingredients_to_add)
-            # TODO: qua dobbiamo generare la frase
-            self.__print_and_mem(self.generate_phrase())
+                    bool_list.append(self.analized_phrase.polarity)
+                self.current_frame.add_ingredients(ingredients_to_add, bool_list)
+
+                # TODO: qua dobbiamo generare la frase
+                self.__print_and_mem(self.generate_phrase())
 
     def __print_and_mem(self, phrase, user=False):
         """
@@ -104,7 +106,8 @@ class DialogueManager:
         """
         Give a hint about the missing ingredients
         """
-        a_missing_ingredient = random.choice(self.current_potion.get_missing_ingredients(self.current_frame.ingredients))
+        a_missing_ingredient = random.choice(
+            self.current_potion.get_missing_ingredients(self.current_frame.ingredients))
         if self.current_mental_state == "happy":
             self.__print_and_mem(f"Here is a hint... one of the missing ingredients is: {a_missing_ingredient}")
         elif self.current_mental_state == "neutral":
@@ -122,13 +125,23 @@ class DialogueManager:
 
     def check_ending_condition(self):
         # TODO: dovremmo controllare anche magari se l'utente ha detto una cosa del tipo "non so niente..."
-        return self.current_frame.is_complete() or self.turn > self.max_turns
+        return self.current_frame.is_complete or self.turn > self.max_turns
 
     def wait_for_user_input(self):
         self.current_answer = input()
         self.analized_phrase = analisys.PhraseAnalisys(self.current_answer)
-        if self.analized_phrase.check_if_useful(useful_words[self.current_potion.get_name()]):
+        if self.analized_phrase.check_if_useful():
             self.current_state = "fill the frame"
         else:
             self.current_state = "not useful"
         self.user_memory.append(self.current_answer)
+
+    def generate_phrase(self):
+        # TODO: stub
+        self.current_frame.debug()
+        return "Are there any spiders in the potion?"
+
+
+if __name__ == "__main__":
+    dm = DialogueManager()
+    dm.flow()
