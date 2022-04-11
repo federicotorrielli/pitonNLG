@@ -2,6 +2,7 @@ import random
 
 import analisys
 import frame
+import spacy
 from knowledge_base import *
 
 
@@ -39,9 +40,10 @@ class DialogueManager:
         The dialogue ends when the frame is complete or after a certain number of turns (or time passed)
         """
         self.intro()
+        self.wait_for_user_input()
         while self.current_state != self.check_ending_condition():
-            self.wait_for_user_input()
             self.questions()
+            self.wait_for_user_input()
             self.turn += 1
         self.end()
 
@@ -124,8 +126,14 @@ class DialogueManager:
         pass
 
     def check_ending_condition(self):
-        # TODO: dovremmo controllare anche magari se l'utente ha detto una cosa del tipo "non so niente..."
-        return self.current_frame.is_complete or self.turn > self.max_turns
+        return self.current_frame.is_complete or self.turn > self.max_turns or self.check_sa_qualcosa()
+
+    def check_sa_qualcosa(self):
+        if not self.analized_phrase.polarity and self.analized_phrase.is_useful:
+            for w in ending_words:
+                if w in self.current_answer:
+                    return True
+                
 
     def wait_for_user_input(self):
         self.current_answer = input()
