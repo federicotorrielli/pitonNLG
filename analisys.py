@@ -7,7 +7,7 @@ class PhraseAnalisys:
     def __init__(self, phrase: str):
         self.phrase = phrase
         self.nlp = spacy.load("en_core_web_md")  # python -m spacy download en_core_web_md
-        self.doc = self.nlp(self.phrase) # TODO: correggere la frase prima di fare nlp
+        self.doc = self.nlp(self.phrase)  # TODO: correggere la frase prima di fare nlp
         self.tokenized_phrase = [word.text.lower() for word in self.doc]
         self.is_question = self.check_if_question()
         self.is_useful = False
@@ -54,10 +54,12 @@ class PhraseAnalisys:
             if word in useful_words:
                 useful = True
                 self.useful_list.append(word)
-            elif self.dependency_tree()[word][0] == "amod" and f"{word} {self.dependency_tree()[word][1]}" in useful_words:
+            elif self.dependency_tree()[word][
+                0] == "amod" and f"{word} {self.dependency_tree()[word][1]}" in useful_words:
                 useful = True
                 self.useful_list.append(f"{word} {self.dependency_tree()[word][1]}")
-            elif self.dependency_tree()[word][0] == "poss" and f"{word}'s {self.dependency_tree()[word][1]}" in useful_words:
+            elif self.dependency_tree()[word][
+                0] == "poss" and f"{word}'s {self.dependency_tree()[word][1]}" in useful_words:
                 useful = True
                 self.useful_list.append(f"{word}'s {self.dependency_tree()[word][1]}")
             elif self.dependency_tree()[word][0] == "compound":
@@ -100,10 +102,11 @@ class PhraseAnalisys:
 
 
 if __name__ == "__main__":
-    strin = PhraseAnalisys("There is boomslan skin in the potion")
+    strin = PhraseAnalisys("There is boomslang skin in the potion")
     from pprint import pprint
+
     # pprint(strin.doc.to_json())
     pprint(strin.dependency_tree())
-    pprint(strin.ner())
-    print(strin.check_if_useful())
-    print(strin.check_polarity())
+    print(f"NER: {strin.ner()}")
+    print(f"Is useful: {strin.check_if_useful()}")
+    print(f"Polarity: {strin.check_polarity()}")

@@ -1,8 +1,8 @@
-from knowledge_base import *
-import potion
 import random
+
 import analisys
 import frame
+from knowledge_base import *
 
 
 class DialogueManager:
@@ -70,10 +70,10 @@ class DialogueManager:
                 self.__print_and_mem("Silence. This is not what you are supposed to say to me.")
                 self.__print_and_mem(self.memory[len(self.memory) - 2])
             else:
-                ingredients_to_add = []
+                ingredients_to_add = set([])
                 bool_list = []
                 for ingredient in self.analized_phrase.useful_list:
-                    ingredients_to_add.append(ingredient)
+                    ingredients_to_add.add(ingredient)
                     bool_list.append(self.analized_phrase.polarity)
                 self.current_frame.add_ingredients(ingredients_to_add, bool_list)
 
