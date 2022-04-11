@@ -1,18 +1,30 @@
 import spacy
-from fuzzywuzzy import fuzz
+from thefuzz import fuzz
 from knowledge_base import useful_words, useful_unique_words
 
 
 class PhraseAnalisys:
     def __init__(self, phrase: str):
         self.phrase = phrase
+        self.correct_phrase()
         self.nlp = spacy.load("en_core_web_md")  # python -m spacy download en_core_web_md
-        self.doc = self.nlp(self.phrase)  # TODO: correggere la frase prima di fare nlp
+        self.doc = self.nlp(self.phrase)
         self.tokenized_phrase = [word.text.lower() for word in self.doc]
         self.is_question = self.check_if_question()
         self.is_useful = False
         self.polarity = self.check_polarity()  # False is negative and True is positive
         self.useful_list = []
+
+    def correct_phrase(self) -> None:
+        """
+        Given a phrase, fuzzy-correct the name and the ingredients
+        with the ones in the knowledge base (useful_unique_words)
+        :return: None
+        """
+        for word in self.phrase.split():
+            for correct_word in useful_unique_words:
+                if 80 < fuzz.ratio(word, correct_word) < 100:
+                    self.phrase = self.phrase.replace(word, correct_word)
 
     def dependency_tree(self) -> dict:
         """
@@ -102,7 +114,7 @@ class PhraseAnalisys:
 
 
 if __name__ == "__main__":
-    strin = PhraseAnalisys("There is boomslang skin in the potion")
+    strin = PhraseAnalisys("There is boomslan skin in the potion")
     from pprint import pprint
 
     # pprint(strin.doc.to_json())

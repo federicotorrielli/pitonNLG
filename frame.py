@@ -1,5 +1,6 @@
 import potion
 
+
 class Frame:
     def __init__(self, frame_potion: potion.Potion, ingredients=None):
         if ingredients is None:
