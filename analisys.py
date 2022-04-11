@@ -5,7 +5,7 @@ from knowledge_base import useful_words, useful_unique_words
 
 class PhraseAnalisys:
     def __init__(self, phrase: str):
-        self.phrase = phrase
+        self.phrase = phrase.lower()
         self.correct_phrase()
         self.nlp = spacy.load("en_core_web_md")  # python -m spacy download en_core_web_md
         self.doc = self.nlp(self.phrase)
@@ -21,6 +21,7 @@ class PhraseAnalisys:
         with the ones in the knowledge base (useful_unique_words)
         :return: None
         """
+        self.phrase = self.phrase.replace("?", " ?")
         for word in self.phrase.split():
             for correct_word in useful_unique_words:
                 if 80 < fuzz.ratio(word, correct_word) < 100:
@@ -49,7 +50,7 @@ class PhraseAnalisys:
         for m in self.doc.to_json()["tokens"]:
             if m['morph'] == "Polarity=Neg" or m['dep'] == 'neg':
                 self.polarity = False
-            elif m['lemma'] == "no" and m['pos'] == "DET" and self.dependency_tree()['no'][1] in self.useful_list:
+            elif m['lemma'] == "no" and m['pos'] == "DET" and self.dependency_tree()['no'][1] in useful_unique_words:
                 self.polarity = False
         return self.polarity
 
@@ -113,7 +114,8 @@ class PhraseAnalisys:
 
 
 if __name__ == "__main__":
-    strin = PhraseAnalisys("I don't know anything")
+    strin = PhraseAnalisys("I don't know anything spders?")
+    print(strin.phrase)
     from pprint import pprint
 
     #pprint(strin.doc.to_json())

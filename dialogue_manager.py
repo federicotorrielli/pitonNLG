@@ -41,7 +41,7 @@ class DialogueManager:
         """
         self.intro()
         self.wait_for_user_input()
-        while self.check_ending_condition():
+        while not self.check_ending_condition():
             self.questions()
             self.wait_for_user_input()
             self.turn += 1
@@ -123,7 +123,7 @@ class DialogueManager:
         """
         Gives the user the grade and the comment
         """
-        print("Fine del cazzo")
+        print(f"Fine del cazzo {self.turn}")
         pass
 
     def check_ending_condition(self):
@@ -131,7 +131,7 @@ class DialogueManager:
 
     def non_sa(self):
         not_know = False
-        if not self.analized_phrase.polarity and self.analized_phrase.is_useful:
+        if not self.analized_phrase.polarity and not self.analized_phrase.is_useful:
             for w in ending_words:
                 if w in self.analized_phrase.tokenized_phrase:
                     not_know = True

@@ -2,8 +2,8 @@ class Potion:
     def __init__(self, name, ingredients=None):
         if ingredients is None:
             ingredients = []
-        self.name = name
-        self.ingredients = ingredients
+        self.name = name.lower()
+        self.ingredients = [ingredient.lower() for ingredient in ingredients]
 
     def add_ingredient(self, ingredient: str):
         self.ingredients.append(ingredient)
