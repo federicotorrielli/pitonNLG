@@ -21,3 +21,4 @@ useful_words = ["cherries", "chicken", "spiders", "fluxweed", "knotgrass", "lace
 useful_unique_words = ["cherries", "chicken", "spiders", "fluxweed", "knotgrass", "lacewing", "flies", "leeches",
                        "bicorn", "horn", "boomslang", "skin", "hair", "lether", "river", "water", "valierian", "spring",
                        "mistletoe", "berry", "standard", "ingredient"]
+ending_words = ["know", "study", "learn", "remember"]
