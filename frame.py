@@ -3,8 +3,10 @@ from fuzzywuzzy import fuzz
 
 
 class Frame:
-    def __init__(self, potion: potion.Potion, ingredients=[]):
-        self.potion = potion
+    def __init__(self, frame_potion: potion.Potion, ingredients=None):
+        if ingredients is None:
+            ingredients = []
+        self.potion = frame_potion
         self.ingredients = set(ingredients)
         self.error_ingredients = set([])
         self.external_ingredients = set([])
@@ -12,7 +14,7 @@ class Frame:
         self.is_correct = False
         self.number_of_operations_made = 0
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f"{self.potion.name} {self.ingredients}"
 
     def debug(self):
@@ -24,7 +26,7 @@ class Frame:
         print(f"Is correct: {self.is_correct}")
         print(f"Number of op made: {self.number_of_operations_made}")
 
-    def add_ingredients(self, ingredients, positive: [bool]):
+    def add_ingredients(self, ingredients: set, positive: [bool]):
         if not self.check_complete():
             for count, ingredient in enumerate(ingredients):
                 ingredient = self.__fuzz_ingredient(ingredient)
@@ -38,7 +40,7 @@ class Frame:
                         self.external_ingredients.add(ingredient)
             self.number_of_operations_made += 1
 
-    def __fuzz_ingredient(self, ingredient):
+    def __fuzz_ingredient(self, ingredient: str) -> str:
         for potion_ingredient in self.potion.ingredients:
             if fuzz.ratio(ingredient, potion_ingredient) > 80:
                 return potion_ingredient

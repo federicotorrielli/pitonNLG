@@ -5,10 +5,10 @@ class Potion:
         self.name = name
         self.ingredients = ingredients
 
-    def add_ingredient(self, ingredient):
+    def add_ingredient(self, ingredient: str):
         self.ingredients.append(ingredient)
 
-    def remove_ingredient(self, ingredient):
+    def remove_ingredient(self, ingredient: str):
         self.ingredients.remove(ingredient)
 
     def __eq__(self, other):
@@ -26,19 +26,19 @@ class Potion:
     def __repr__(self):
         return f"{self.name} --> {self.ingredients}"
 
-    def get_ingredients(self):
+    def get_ingredients(self) -> [str]:
         return self.ingredients
 
-    def set_ingredients(self, ingredients):
+    def set_ingredients(self, ingredients: [str]):
         self.ingredients = ingredients
 
-    def get_name(self):
+    def get_name(self) -> str:
         return self.name
 
-    def set_name(self, name):
+    def set_name(self, name: str):
         self.name = name
 
-    def get_missing_ingredients(self, proposed_ingredients: [str]):
+    def get_missing_ingredients(self, proposed_ingredients: [str]) -> [str]:
         missing_ingredients = []
         for ingredient in self.ingredients:
             if ingredient not in proposed_ingredients:

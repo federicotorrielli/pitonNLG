@@ -14,14 +14,14 @@ class PhraseAnalisys:
         self.polarity = self.check_polarity()  # False is negative and True is positive
         self.useful_list = []
 
-    def dependency_tree(self):
+    def dependency_tree(self) -> dict:
         """
         Get the dependency tree for the phrase
         :return: A dict containing the dependency tree in the form: {word: (dep, head)}
         """
         return self.__parse(self.doc.to_json()["tokens"])
 
-    def check_if_question(self):
+    def check_if_question(self) -> bool:
         """
         Check if the phrase is a question
         :return: True if the phrase is a question, False otherwise
@@ -32,7 +32,7 @@ class PhraseAnalisys:
             self.is_question = False
         return self.is_question
 
-    def check_polarity(self):
+    def check_polarity(self) -> bool:
         for m in self.doc.to_json()["tokens"]:
             if m['morph'] == "Polarity=Neg":
                 self.polarity = False
@@ -42,7 +42,7 @@ class PhraseAnalisys:
                 self.polarity = True
         return self.polarity
 
-    def check_if_useful(self):
+    def check_if_useful(self) -> bool:
         """
         Check if the phrase contains any of the ingredients
         of the potions
@@ -72,14 +72,14 @@ class PhraseAnalisys:
         self.is_useful = useful
         return self.is_useful
 
-    def ner(self):
+    def ner(self) -> list:
         """
         Get the named entity recognition for the phrase
         :return: A dict containing the ner in the form: {word: ner}
         """
         return [(word.label_, word.text) for word in self.doc.ents]
 
-    def __parse(self, json_dependency_tree):
+    def __parse(self, json_dependency_tree) -> dict:
         """
         Get the dependency tuple for every word in the phrase
         This method should be private only and only used by the dependency_tree method
@@ -91,7 +91,7 @@ class PhraseAnalisys:
             dt[word] = (dep, self.tokenized_phrase[head])
         return dt
 
-    def __correct_phrase(self, words):
+    def __correct_phrase(self, words) -> list:
         for count, word in enumerate(words):
             for correct_word in useful_unique_words:
                 if fuzz.ratio(word, correct_word) > 80:
@@ -102,8 +102,7 @@ class PhraseAnalisys:
 if __name__ == "__main__":
     strin = PhraseAnalisys("There is boomslan skin in the potion")
     from pprint import pprint
-
-    #pprint(strin.doc.to_json())
+    # pprint(strin.doc.to_json())
     pprint(strin.dependency_tree())
     pprint(strin.ner())
     print(strin.check_if_useful())
