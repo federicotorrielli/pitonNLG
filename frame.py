@@ -1,5 +1,4 @@
 import potion
-from fuzzywuzzy import fuzz
 
 
 class Frame:
@@ -29,7 +28,6 @@ class Frame:
     def add_ingredients(self, ingredients: set, positive: [bool]):
         if not self.check_complete():
             for count, ingredient in enumerate(ingredients):
-                ingredient = self.__fuzz_ingredient(ingredient)
                 if ingredient in self.potion.ingredients:
                     if positive[count]:
                         self.ingredients.add(ingredient)
@@ -39,12 +37,6 @@ class Frame:
                     if positive[count]:
                         self.external_ingredients.add(ingredient)
             self.number_of_operations_made += 1
-
-    def __fuzz_ingredient(self, ingredient: str) -> str:
-        for potion_ingredient in self.potion.ingredients:
-            if fuzz.ratio(ingredient, potion_ingredient) > 80:
-                return potion_ingredient
-        return ingredient
 
     def check_complete(self) -> bool:
         if len(self.ingredients) + len(self.error_ingredients) == len(self.potion.ingredients):
