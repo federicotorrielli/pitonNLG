@@ -45,13 +45,12 @@ class PhraseAnalisys:
         return self.is_question
 
     def check_polarity(self) -> bool:
+        self.polarity = True
         for m in self.doc.to_json()["tokens"]:
-            if m['morph'] == "Polarity=Neg":
+            if m['morph'] == "Polarity=Neg" or m['dep'] == 'neg':
                 self.polarity = False
             elif m['lemma'] == "no" and m['pos'] == "DET" and self.dependency_tree()['no'][1] in self.useful_list:
                 self.polarity = False
-            else:
-                self.polarity = True
         return self.polarity
 
     def check_if_useful(self) -> bool:
@@ -114,10 +113,10 @@ class PhraseAnalisys:
 
 
 if __name__ == "__main__":
-    strin = PhraseAnalisys("There is boomslan skin in the potion")
+    strin = PhraseAnalisys("I don't know anything")
     from pprint import pprint
 
-    # pprint(strin.doc.to_json())
+    #pprint(strin.doc.to_json())
     pprint(strin.dependency_tree())
     print(f"NER: {strin.ner()}")
     print(f"Is useful: {strin.check_if_useful()}")
