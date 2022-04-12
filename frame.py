@@ -21,7 +21,7 @@ class Frame:
         print(f"Potion Ingredients: {self.potion.ingredients}")
         print(f"Errors: {self.error_ingredients}")
         print(f"External Ingredients: {self.external_ingredients}")
-        print(f"Is complete: {self.is_complete}")
+        print(f"Is complete: {self.is_complete}" + str(len(self.ingredients) + len(self.error_ingredients)) + "==" + str(len(self.potion.ingredients)))
         print(f"Is correct: {self.is_correct}")
         print(f"Number of op made: {self.number_of_operations_made}")
 

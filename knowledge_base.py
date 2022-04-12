@@ -22,3 +22,5 @@ useful_unique_words = ["cherries", "chicken", "spiders", "fluxweed", "knotgrass"
                        "bicorn", "horn", "boomslang", "skin", "hair", "lether", "river", "water", "valierian", "spring",
                        "mistletoe", "berry", "standard", "ingredient"]
 ending_words = ["know", "study", "learn", "remember"]
+question_start_words = ["is", "are", "does", "do", "don't", "doesn't", "what", "when", "where", "who", "why", "what",
+                        "how"]

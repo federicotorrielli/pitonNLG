@@ -1,6 +1,6 @@
 import spacy
 from thefuzz import fuzz
-from knowledge_base import useful_words, useful_unique_words
+from knowledge_base import *
 
 
 class PhraseAnalisys:
@@ -25,7 +25,10 @@ class PhraseAnalisys:
         for word in self.phrase.split():
             for correct_word in useful_unique_words:
                 if 80 < fuzz.ratio(word, correct_word) < 100:
-                    self.phrase = self.phrase.replace(word, correct_word)
+                    if correct_word == "bicorn":
+                        self.phrase = self.phrase.replace(word, "bicorn's")
+                    else:
+                        self.phrase = self.phrase.replace(word, correct_word)
 
     def dependency_tree(self) -> dict:
         """
@@ -39,7 +42,7 @@ class PhraseAnalisys:
         Check if the phrase is a question
         :return: True if the phrase is a question, False otherwise
         """
-        if "?" in self.phrase:
+        if "?" in self.phrase or self.tokenized_phrase[0] in question_start_words:
             self.is_question = True
         else:
             self.is_question = False
@@ -114,12 +117,13 @@ class PhraseAnalisys:
 
 
 if __name__ == "__main__":
-    strin = PhraseAnalisys("I don't know anything spders?")
+    strin = PhraseAnalisys("Do I want to drink the potion of invisibility")
     print(strin.phrase)
     from pprint import pprint
 
-    #pprint(strin.doc.to_json())
+    pprint(strin.doc.to_json())
     pprint(strin.dependency_tree())
     print(f"NER: {strin.ner()}")
     print(f"Is useful: {strin.check_if_useful()}")
     print(f"Polarity: {strin.check_polarity()}")
+    print(f"Is question: {strin.check_if_question()}")
