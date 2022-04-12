@@ -214,6 +214,7 @@ class DialogueManager:
         return self.nlg_fillers.generate_sentence()
 
     def resolve_yesno(self) -> None:
+        # TODO: in self.__ingredient si trova l'ingrediente che Piton ha chiesto e a cui l'utente ha risposto si, no...
         if self.current_state == "yesno-trick":
             self.current_state = "questions"
             if self.analized_phrase.yesno == "yes":
