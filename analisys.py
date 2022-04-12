@@ -12,6 +12,7 @@ class PhraseAnalisys:
         self.tokenized_phrase = [word.text.lower() for word in self.doc]
         self.is_question = self.check_if_question()
         self.is_useful = False
+        self.yesno = self.check_yesno()
         self.polarity = self.check_polarity()  # False is negative and True is positive
         self.useful_list = []
 
@@ -114,6 +115,18 @@ class PhraseAnalisys:
                 if fuzz.ratio(word, correct_word) > 80:
                     words[count] = correct_word
         return words
+
+    def check_yesno(self):
+        """
+        Check if the phrase contains a yes or no question
+        :return: "yes" if the phrase contains a yes question, "no" if the phrase contains a no question, None otherwise
+        """
+        if "yes" in self.tokenized_phrase:
+            return "yes"
+        elif "no" in self.tokenized_phrase:
+            return "no"
+        else:
+            return None
 
 
 if __name__ == "__main__":

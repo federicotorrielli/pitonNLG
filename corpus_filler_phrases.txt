@@ -1,10 +1,10 @@
 What other ingredients might be in the potion?
 What other ingredients are in the potion?
-Tell me more about the potion. I'll be waiting.
+Describe better the potion. I'll be waiting.
 I think we are not done, tell me more ingredients.
 What else is in the potion?
 What more can you tell me about the potion? I'm all ears.
-I don't think we're done. Tell me more about the other ingredients.
+I don't think we're done. Specify the other ingredients.
 What else is in there?
 Do you know the real ingredients or are you just here to waste my time?
 Do you remember other ingredients?
