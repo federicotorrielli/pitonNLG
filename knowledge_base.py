@@ -15,12 +15,13 @@ happy_intro_phrases = [
 angry_intro_phrases = [
     "Let's get this done quicky. I never saw you to my lessons, so I don't see how you're going to pass this exam, but will give you one try only.",
     "I can recognize an unprepared student right away,\nI'll give you a chance this time, but let's hurry..."]
-useful_words = ["cherries", "chicken", "spiders", "fluxweed", "knotgrass", "lacewing flies", "leeches",
+useful_words = ["cherries", "cherry", "chicken", "spiders", "spider", "fluxweed", "knotgrass", "lacewing flies", "leeches", "leech"
                 "bicorn's horn", "boomslang skin", "hair", "lether river water", "valierian spring", "mistletoe berry",
                 "standard ingredient"]
-useful_unique_words = ["cherries", "chicken", "spiders", "fluxweed", "knotgrass", "lacewing", "flies", "leeches",
+correct_words = ["cherries", "cherry", "chicken", "spiders", "spider", "fluxweed", "knotgrass", "lacewing", "flies", "leeches", "leech"
                        "bicorn", "horn", "boomslang", "skin", "hair", "lether", "river", "water", "valierian", "spring",
                        "mistletoe", "berry", "standard", "ingredient"]
 ending_words = ["know", "study", "learn", "remember"]
 question_start_words = ["is", "are", "does", "do", "don't", "doesn't", "what", "when", "where", "who", "why", "what",
                         "how"]
+plural_singular_possible_errors = ["cherry", "spider", "leech"]

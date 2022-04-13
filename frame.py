@@ -12,6 +12,7 @@ class Frame:
         self.is_complete = False
         self.is_correct = False
         self.number_of_operations_made = 0
+        self.penality = 0
 
     def __str__(self) -> str:
         return f"{self.potion.name} {self.ingredients}"

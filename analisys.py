@@ -15,21 +15,24 @@ class PhraseAnalisys:
         self.yesno = self.check_yesno()
         self.polarity = self.check_polarity()  # False is negative and True is positive
         self.useful_list = []
+        self.number_errors = 0
 
     def correct_phrase(self) -> None:
         """
         Given a phrase, fuzzy-correct the name and the ingredients
-        with the ones in the knowledge base (useful_unique_words)
+        with the ones in the knowledge base (correct_words)
         :return: None
         """
         self.phrase = self.phrase.replace("?", " ?")
-        for word in self.phrase.split():
-            for correct_word in useful_unique_words:
-                if 80 < fuzz.ratio(word, correct_word) < 100:
-                    if correct_word == "bicorn":
-                        self.phrase = self.phrase.replace(word, "bicorn's")
-                    else:
-                        self.phrase = self.phrase.replace(word, correct_word)
+        max_wr = {}
+        for wr in correct_words:
+            for word in self.phrase.split():
+                if fuzz.ratio(word, wr) > 80:
+                    if wr not in max_wr or max_wr[wr][0] < fuzz.ratio(word, wr):
+                        max_wr[wr] = (fuzz.ratio(word, wr), word)
+        for wr in max_wr:
+            self.phrase = self.phrase.replace(max_wr[wr][1], wr)
+        self.number_errors = len([word for word in max_wr if word in plural_singular_possible_errors])
 
     def dependency_tree(self) -> dict:
         """
@@ -54,7 +57,7 @@ class PhraseAnalisys:
         for m in self.doc.to_json()["tokens"]:
             if m['morph'] == "Polarity=Neg" or m['dep'] == 'neg':
                 self.polarity = False
-            elif m['lemma'] == "no" and m['pos'] == "DET" and self.dependency_tree()['no'][1] in useful_unique_words:
+            elif m['lemma'] == "no" and m['pos'] == "DET" and self.dependency_tree()['no'][1] in correct_words:
                 self.polarity = False
         return self.polarity
 
@@ -109,13 +112,6 @@ class PhraseAnalisys:
             dt[word] = (dep, self.tokenized_phrase[head])
         return dt
 
-    def __correct_phrase(self, words) -> list:
-        for count, word in enumerate(words):
-            for correct_word in useful_unique_words:
-                if fuzz.ratio(word, correct_word) > 80:
-                    words[count] = correct_word
-        return words
-
     def check_yesno(self):
         """
         Check if the phrase contains a yes or no question
@@ -130,7 +126,7 @@ class PhraseAnalisys:
 
 
 if __name__ == "__main__":
-    strin = PhraseAnalisys("Do I want to drink the potion of invisibility")
+    strin = PhraseAnalisys("I usually eat a lot of spders, I really like to eat a spder")
     print(strin.phrase)
     from pprint import pprint
 
