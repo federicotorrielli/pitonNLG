@@ -35,8 +35,6 @@ class DialogueManager:
         self.__ingredient = ""
         self.hint = {"neutral": 0.5, "happy": 0.8, "angry": 0.2}
         self.trabocchetto = {"neutral": 0.5, "happy": 0.2, "angry": 0.7}
-        self.current_grade = 1
-        self.current_comment = ""
         self.turn = 1
         self.nlg_questions = language_generator.NaturalLanguageGenerator(corpus_path="corpus_potion_questions.txt")
         self.nlg_fillers = language_generator.NaturalLanguageGenerator(corpus_path="corpus_filler_phrases.txt")
@@ -111,10 +109,17 @@ class DialogueManager:
     def end(self) -> None:
         """
         Gives the user the grade and the comment
+        Grade is calculated based on the number of turns and the number of correct answers.
+        The maximum grade is 30/30, the minimum is 0/30. You can only take 30/30 if you answer all the questions
+        correctly in exactly len(potion.ingredients) turns, otherwise, after len(potion.ingredients) turns, your grade
+        will start to decrease: -2 for each wrong answer, -1 for each turn after the first wrong answer.
+        The current mental state of the bot affects the grade: if the bot (piton) is happy, instead of -2, the grade
+        will be decreased by 1.
+        :return: None
         """
-        # TODO: add the grade and the comment (finish everything)
-        print(f"Fine del cazzo {self.turn}")
-        pass
+        # TODO: do the grade calculation
+        grade = 30
+        print(f"Fine: {self.turn}")
 
     def check_ending_condition(self) -> bool:
         """
