@@ -36,8 +36,8 @@ class DialogueManager:
         self.hint = {"neutral": 0.5, "happy": 0.8, "angry": 0.2}
         self.trabocchetto = {"neutral": 0.5, "happy": 0.2, "angry": 0.7}
         self.turn = 1
-        self.nlg_questions = language_generator.NaturalLanguageGenerator(corpus_path="corpus_potion_questions.txt")
-        self.nlg_fillers = language_generator.NaturalLanguageGenerator(corpus_path="corpus_filler_phrases.txt")
+        self.nlg_questions = language_generator.NaturalLanguageGenerator(corpus_path="corpus_potion_questions_angry.txt")
+        self.nlg_fillers = language_generator.NaturalLanguageGenerator(corpus_path="corpus_filler_phrases_neutral.txt")
 
     def flow(self) -> None:
         """

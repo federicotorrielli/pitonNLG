@@ -18,5 +18,5 @@ class NaturalLanguageGenerator:
 
 
 if __name__ == '__main__':
-    nlg = NaturalLanguageGenerator(corpus_path='corpus_potion_questions.txt')
+    nlg = NaturalLanguageGenerator(corpus_path='corpus_potion_questions_happy.txt')
     print(nlg.generate_sentence())
