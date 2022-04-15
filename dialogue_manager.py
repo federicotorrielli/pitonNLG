@@ -4,6 +4,7 @@ import analisys
 import frame
 import language_generator
 from knowledge_base import *
+from colored import fg, stylize
 
 
 class DialogueManager:
@@ -23,7 +24,7 @@ class DialogueManager:
 
     def __init__(self, max_turns=15):
         self.max_turns = max_turns
-        self.analized_phrase = None
+        self.analized_phrase: analisys.PhraseAnalisys = None
         self.current_answer = None
         self.potions = [polyjuice_potion, invisibility_potion, forgetfulness_potion]
         self.current_potion = random.choice(self.potions)
@@ -32,6 +33,8 @@ class DialogueManager:
         self.current_frame = frame.Frame(self.current_potion, [])
         self.current_state = "intro"
         self.current_mental_state = random.choices(["neutral", "happy", "angry"], weights=[0.2, 0.1, 0.7])[0]
+        self.current_color_for_mental_state = "blue" if self.current_mental_state == "neutral" else "green" \
+            if self.current_mental_state == "happy" else "red"
         self.__ingredient = ""
         self.hint = {"neutral": 0.5, "happy": 0.8, "angry": 0.2}
         self.trabocchetto = {"neutral": 0.5, "happy": 0.2, "angry": 0.7}
@@ -84,7 +87,7 @@ class DialogueManager:
         """
         Print the phrase and memorize it
         """
-        print(phrase)
+        print(stylize(phrase, fg(self.current_color_for_mental_state)))
         if user:
             self.user_memory.append(phrase)
         else:
@@ -97,10 +100,12 @@ class DialogueManager:
         """
         if self.current_mental_state == "neutral":
             self.__print_and_mem(
-                f"Tell me the ingredients of the {self.current_potion.get_name()}.\nYou should also tell me about the quantities... But it's up to you.")
+                f"Tell me the ingredients of the {self.current_potion.get_name()}."
+                f"\nYou should also tell me about the quantities... But it's up to you.")
         elif self.current_mental_state == "happy":
             self.__print_and_mem(
-                f"As you will remember the training we did, the {self.current_potion.get_name()} contains what ingredients?")
+                f"As you will remember the training we did, the {self.current_potion.get_name()} "
+                f"contains what ingredients?")
             self.__print_and_mem(f"I can give you an hint, if you want...")
         elif self.current_mental_state == "angry":
             self.__print_and_mem(
@@ -108,18 +113,30 @@ class DialogueManager:
 
     def end(self) -> None:
         """
-        Gives the user the grade and the comment
-        Grade is calculated based on the number of turns and the number of correct answers.
-        The maximum grade is 30/30, the minimum is 0/30. You can only take 30/30 if you answer all the questions
-        correctly in exactly len(potion.ingredients) turns, otherwise, after len(potion.ingredients) turns, your grade
-        will start to decrease: -2 for each wrong answer, -1 for each turn after the first wrong answer.
-        The current mental state of the bot affects the grade: if the bot (piton) is happy, instead of -2, the grade
-        will be decreased by 1.
+        Calculate the grade with the following formula:
+        grade = 31 - alpha * p where:
+        - alpha = penalty moltiplicator (1.5 if the user is angry, 1 if neutral, 0.75 if happy)
+        - p = #err + (#ext + #plur) / 2 + (3 * t - 3)
+        - #err = # of errors
+        - #ext = # of ingredients that are external to the potion (valid ingredients BUT not in the potion)
+        - #plur = # of ingredients that the user wrongly said singular when they were plural (ex. spider -> spiders)
+        - t = # of turns calculated as: # total turns / # of perfect turns (where the user said the correct ingredients)
         :return: None
         """
-        # TODO: do the grade calculation
-        grade = 30
-        print(f"Fine: {self.turn}")
+        t = self.turn / len(self.current_frame.ingredients)
+        p = self.analized_phrase.number_errors + (
+                len(self.current_frame.external_ingredients) + self.current_frame.penality) / 2 + (3 * t - 3)
+        alpha = 1 if self.current_mental_state == "neutral" else (0.75 if self.current_mental_state == "happy" else 1.5)
+        grade = 31 - alpha * p
+        if self.current_mental_state == "neutral":
+            self.__print_and_mem(f"Your grade is {grade}")
+            # TODO: generate neutral comment (but still based on the grade)
+        elif self.current_mental_state == "happy":
+            self.__print_and_mem(f"Your grade is {grade}")
+            # TODO: generate happy comment (but still based on the grade)
+        elif self.current_mental_state == "angry":
+            self.__print_and_mem(f"Your grade is {grade}")
+            # TODO: generate angry comment (but still based on the grade)
 
     def check_ending_condition(self) -> bool:
         """
@@ -201,13 +218,12 @@ class DialogueManager:
                 return self.generate_hint_question()
         else:
             choice = random.uniform(0, 1)
-            print(choice)
             if choice < self.trabocchetto[self.current_mental_state]:
-                return self.generate_hint_question()  # Riformulo domanda
+                return self.generate_hint_question()  # Question him again
             else:
                 self.current_state = "trabocchino"
                 self.__ingredient = current_ingredient
-                return generated_phrase  # Domanda trabocchetto
+                return generated_phrase  # Trick question
 
     def generate_filler(self) -> str:
         """

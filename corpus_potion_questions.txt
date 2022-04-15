@@ -9,7 +9,7 @@ Could the potion contain Cherries?
 Do you remember if Chicken is in the potion?
 Do you need to put Spiders in the potion?
 Is there Lether River Water in the potion?
-Do you think that Valerian Spring might be in the potion?
+Do you think that Valerian Spring is in the potion?
 Does this potion contain the Standard Ingredient?
 Could Mistletoe Berry possibly be in the potion?
 Is there a chance that the potion contains a Fluxweed?
