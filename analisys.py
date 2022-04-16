@@ -24,7 +24,7 @@ class PhraseAnalisys:
         """
         self.phrase = self.phrase.replace("?", " ?")
         correct_phrase = ""
-        for word in self.phrase.split(): 
+        for word in self.phrase.split():
             best_word = word
             best_fr = 0
             for wr in correct_words:
@@ -34,7 +34,6 @@ class PhraseAnalisys:
                     best_word = wr
             correct_phrase += f"{best_word} "
         self.phrase = correct_phrase
-            
 
     def dependency_tree(self) -> dict:
         """
