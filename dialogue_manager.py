@@ -2,6 +2,7 @@ import random
 
 import analisys
 import frame
+import math
 import language_generator
 from knowledge_base import *
 from colored import fg, stylize
@@ -39,7 +40,8 @@ class DialogueManager:
         self.hint = {"neutral": 0.5, "happy": 0.8, "angry": 0.2}
         self.trabocchetto = {"neutral": 0.5, "happy": 0.2, "angry": 0.7}
         self.turn = 1
-        self.nlg_questions = language_generator.NaturalLanguageGenerator(corpus_path="corpus_potion_questions.txt")
+        # TODO fare check sullo stato mentale e assegnarli il corretto .txt per generare
+        self.nlg_questions = language_generator.NaturalLanguageGenerator(corpus_path="corpus_potion_questions_angry.txt")
         self.nlg_fillers = language_generator.NaturalLanguageGenerator(corpus_path="corpus_filler_phrases.txt")
 
     def flow(self) -> None:
@@ -123,20 +125,23 @@ class DialogueManager:
         - t = # of turns calculated as: # total turns / # of perfect turns (where the user said the correct ingredients)
         :return: None
         """
-        t = self.turn / len(self.current_frame.ingredients)
-        p = self.analized_phrase.number_errors + (
-                len(self.current_frame.external_ingredients) + self.current_frame.penality) / 2 + (3 * t - 3)
-        alpha = 1 if self.current_mental_state == "neutral" else (0.75 if self.current_mental_state == "happy" else 1.5)
-        grade = 31 - alpha * p
-        if self.current_mental_state == "neutral":
-            self.__print_and_mem(f"Your grade is {grade}")
-            # TODO: generate neutral comment (but still based on the grade)
-        elif self.current_mental_state == "happy":
-            self.__print_and_mem(f"Your grade is {grade}")
-            # TODO: generate happy comment (but still based on the grade)
-        elif self.current_mental_state == "angry":
-            self.__print_and_mem(f"Your grade is {grade}")
-            # TODO: generate angry comment (but still based on the grade)
+        if self.max_turns == self.turn:
+            print("Bocciato coglione")
+        else:
+            t = self.turn / len(self.current_frame.potion.ingredients)
+            p = len(self.current_frame.error_ingredients) + (
+                len(self.current_frame.external_ingredients) + self.current_frame.wrongnumber) / 2 + (3 * t - 3)
+            alpha = 1 if self.current_mental_state == "neutral" else (0.75 if self.current_mental_state == "happy" else 1.5)
+            grade = math.floor(31 - alpha * p)
+            if self.current_mental_state == "neutral":
+                self.__print_and_mem(f"Your grade is {grade}")
+                # TODO: generate neutral comment (but still based on the grade)
+            elif self.current_mental_state == "happy":
+                self.__print_and_mem(f"Your grade is {grade}")
+                # TODO: generate happy comment (but still based on the grade)
+            elif self.current_mental_state == "angry":
+                self.__print_and_mem(f"Your grade is {grade}")
+                # TODO: generate angry comment (but still based on the grade)
 
     def check_ending_condition(self) -> bool:
         """
@@ -164,7 +169,11 @@ class DialogueManager:
         """
         self.current_answer = input()
         self.analized_phrase = analisys.PhraseAnalisys(self.current_answer)
-        if self.analized_phrase.check_yesno() and (self.current_state == "hint" or self.current_state == "trabocchino"):
+        if self.current_state == "hint" or self.current_state == "trabocchino":
+            while(self.analized_phrase.yesno != "yes" and self.analized_phrase.yesno !="no"):
+                print("The question is easy, YOU MUST ANSWER YES OR NO!")
+                self.current_answer = input()
+                self.analized_phrase = analisys.PhraseAnalisys(self.current_answer)
             self.analized_phrase = analisys.PhraseAnalisys(self.resolve_yesno())
         if self.analized_phrase.check_if_useful():
             self.current_state = "fill the frame"
@@ -233,11 +242,10 @@ class DialogueManager:
         return self.nlg_fillers.generate_sentence()
 
     def resolve_yesno(self) -> str:
-        # TODO: in self.__ingredient si trova l'ingrediente che Piton ha chiesto e a cui l'utente ha risposto si, no...
         self.current_state = "questions"
         if self.analized_phrase.yesno == "yes":
             return f"I think that {self.__ingredient} is in the potion."
-        else:
+        elif self.analized_phrase.yesno == "no":
             return f"I don't think {self.__ingredient} is in the potion."
 
 

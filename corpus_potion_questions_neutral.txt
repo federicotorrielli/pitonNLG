@@ -18,3 +18,9 @@ Is it likely that Cherries are in the potion?
 Could the potion contain Hair?
 Do you remember if Leeches is in the potion?
 Do you need to put Valerian Spring in the potion?
+Is the Fluxweed used in the potion?
+Lacewing Flies are needed for potion?
+Are Leeches used in this potion?
+Bicorn's horn is an ingredient?
+Is the hair really necessary for this potion or could it work just as well without it?
+Are there any other interesting ingredient about this particular concoction that you remember?
