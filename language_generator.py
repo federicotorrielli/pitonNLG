@@ -14,7 +14,11 @@ class NaturalLanguageGenerator:
             return f.read()
 
     def generate_sentence(self) -> str:
-        return self.text_model.make_sentence(tries=100)
+        generated_sentence = self.text_model.make_sentence(tries=100)
+        if generated_sentence is None:
+            return self.generate_sentence()
+        else:
+            return generated_sentence
 
 
 if __name__ == '__main__':

@@ -15,7 +15,6 @@ class PhraseAnalisys:
         self.yesno = self.check_yesno()
         self.polarity = self.check_polarity()  # False is negative and True is positive
         self.useful_list = []
-        self.number_errors = 0
 
     def correct_phrase(self) -> None:
         """
@@ -24,15 +23,17 @@ class PhraseAnalisys:
         :return: None
         """
         self.phrase = self.phrase.replace("?", " ?")
-        max_wr = {}
-        for wr in correct_words:
-            for word in self.phrase.split():
-                if fuzz.ratio(word, wr) > 80:
-                    if wr not in max_wr or max_wr[wr][0] < fuzz.ratio(word, wr):
-                        max_wr[wr] = (fuzz.ratio(word, wr), word)
-        for wr in max_wr:
-            self.phrase = self.phrase.replace(max_wr[wr][1], wr)
-        self.number_errors = len([word for word in max_wr if word in plural_singular_possible_errors])
+        correct_phrase = ""
+        for word in self.phrase.split():
+            best_word = word
+            best_fr = 0
+            for wr in correct_words:
+                current_fr = fuzz.ratio(word, wr)
+                if current_fr > 80 and current_fr > best_fr:
+                    best_fr = current_fr
+                    best_word = wr
+            correct_phrase += f"{best_word} "
+        self.phrase = correct_phrase
 
     def dependency_tree(self) -> dict:
         """
@@ -126,7 +127,7 @@ class PhraseAnalisys:
 
 
 if __name__ == "__main__":
-    strin = PhraseAnalisys("I usually eat a lot of spders, I really like to eat a spder")
+    strin = PhraseAnalisys("I like standard ingredients")
     print(strin.phrase)
     from pprint import pprint
 

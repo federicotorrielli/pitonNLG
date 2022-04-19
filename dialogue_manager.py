@@ -2,6 +2,7 @@ import random
 
 import analisys
 import frame
+import math
 import language_generator
 from knowledge_base import *
 from colored import fg, stylize
@@ -39,8 +40,10 @@ class DialogueManager:
         self.hint = {"neutral": 0.5, "happy": 0.8, "angry": 0.2}
         self.trabocchetto = {"neutral": 0.5, "happy": 0.2, "angry": 0.7}
         self.turn = 1
-        self.nlg_questions = language_generator.NaturalLanguageGenerator(corpus_path="corpus_potion_questions_angry.txt")
-        self.nlg_fillers = language_generator.NaturalLanguageGenerator(corpus_path="corpus_filler_phrases_neutral.txt")
+        # TODO fare check sullo stato mentale e assegnarli il corretto .txt per generare
+        self.nlg_questions = language_generator.NaturalLanguageGenerator(
+            corpus_path="corpus_potion_questions_angry.txt")
+        self.nlg_fillers = language_generator.NaturalLanguageGenerator(corpus_path="corpus_filler_phrases.txt")
 
     def flow(self) -> None:
         """
@@ -115,7 +118,7 @@ class DialogueManager:
         """
         Calculate the grade with the following formula:
         grade = 31 - alpha * p where:
-        - alpha = penalty moltiplicator (1.5 if the user is angry, 1 if neutral, 0.75 if happy)
+        - alpha = penalty multiplier (1.5 if the user is angry, 1 if neutral, 0.75 if happy)
         - p = #err + (#ext + #plur) / 2 + (3 * t - 3)
         - #err = # of errors
         - #ext = # of ingredients that are external to the potion (valid ingredients BUT not in the potion)
@@ -123,20 +126,17 @@ class DialogueManager:
         - t = # of turns calculated as: # total turns / # of perfect turns (where the user said the correct ingredients)
         :return: None
         """
-        t = self.turn / len(self.current_frame.ingredients)
-        p = self.analized_phrase.number_errors + (
-                len(self.current_frame.external_ingredients) + self.current_frame.penality) / 2 + (3 * t - 3)
-        alpha = 1 if self.current_mental_state == "neutral" else (0.75 if self.current_mental_state == "happy" else 1.5)
-        grade = 31 - alpha * p
-        if self.current_mental_state == "neutral":
-            self.__print_and_mem(f"Your grade is {grade}")
-            # TODO: generate neutral comment (but still based on the grade)
-        elif self.current_mental_state == "happy":
-            self.__print_and_mem(f"Your grade is {grade}")
-            # TODO: generate happy comment (but still based on the grade)
-        elif self.current_mental_state == "angry":
-            self.__print_and_mem(f"Your grade is {grade}")
-            # TODO: generate angry comment (but still based on the grade)
+        if self.max_turns == self.turn:
+            print("Time is up, student. I will see you the next time. You did not pass the test.")
+        else:
+            t = self.turn / len(self.current_frame.potion.ingredients)
+            p = len(self.current_frame.error_ingredients) + (
+                    len(self.current_frame.external_ingredients) + self.current_frame.wrongnumber) / 2 + (3 * t - 3)
+            alpha = 1 if self.current_mental_state == "neutral" else (
+                0.75 if self.current_mental_state == "happy" else 1.5)
+            grade = math.floor(31 - alpha * p)
+            self.__print_and_mem(f"Your grade is {grade}...")
+            self.generate_comment(grade)
 
     def check_ending_condition(self) -> bool:
         """
@@ -164,7 +164,11 @@ class DialogueManager:
         """
         self.current_answer = input()
         self.analized_phrase = analisys.PhraseAnalisys(self.current_answer)
-        if self.analized_phrase.check_yesno() and (self.current_state == "hint" or self.current_state == "trabocchino"):
+        if self.current_state == "hint" or self.current_state == "trabocchino":
+            while self.analized_phrase.yesno != "yes" and self.analized_phrase.yesno != "no":
+                print("The question is easy, YOU MUST ANSWER YES OR NO!")
+                self.current_answer = input()
+                self.analized_phrase = analisys.PhraseAnalisys(self.current_answer)
             self.analized_phrase = analisys.PhraseAnalisys(self.resolve_yesno())
         if self.analized_phrase.check_if_useful():
             self.current_state = "fill the frame"
@@ -207,7 +211,8 @@ class DialogueManager:
                 if ingredient in self.current_potion.get_ingredients():
                     phrase_ingredient = True
                 break
-        if current_ingredient not in self.current_frame.ingredients and current_ingredient not in self.current_frame.error_ingredients:
+        if current_ingredient not in self.current_frame.ingredients and current_ingredient not \
+                in self.current_frame.error_ingredients:
             phrase_validity = True
         if phrase_ingredient:
             if phrase_validity:
@@ -233,12 +238,46 @@ class DialogueManager:
         return self.nlg_fillers.generate_sentence()
 
     def resolve_yesno(self) -> str:
-        # TODO: in self.__ingredient si trova l'ingrediente che Piton ha chiesto e a cui l'utente ha risposto si, no...
         self.current_state = "questions"
         if self.analized_phrase.yesno == "yes":
             return f"I think that {self.__ingredient} is in the potion."
-        else:
+        elif self.analized_phrase.yesno == "no":
             return f"I don't think {self.__ingredient} is in the potion."
+
+    def generate_comment(self, grade: int) -> None:
+        """
+        Generate a comment based on the grade and on the self.current_mental_state of piton
+        :param grade:
+        :return:
+        """
+        if self.current_mental_state == "happy":
+            if grade > 27:
+                self.__print_and_mem("Excellent job, my student. You are a genius!")
+            elif grade >= 18:
+                self.__print_and_mem("Good job, my student. You are a good one.\nI know you can do better but..."
+                                     " well done.")
+            elif grade < 18:
+                self.__print_and_mem("Not your lucky day, I guess. I'm sorry. I hope you'll try again: you did not "
+                                     "pass the exam.")
+        elif self.current_mental_state == "neutral":
+            if grade > 27:
+                self.__print_and_mem("Good job. As required from a magic student.")
+            elif grade >= 18:
+                self.__print_and_mem("I don’t expect you will really understand the beauty of the softly "
+                                     "simmering cauldron with its shimmering fumes, the delicate power of "
+                                     "liquids that creep through human veins,"
+                                     " bewitching the mind, ensnaring the senses...\n But you passed the test.")
+            elif grade < 18:
+                self.__print_and_mem("You have no subtlety, Student, You do not understand fine distinctions. "
+                                     "It is one of the shortcomings that makes you such a lamentable potion-maker. "
+                                     "Get out.")
+        elif self.current_mental_state == "angry":
+            if grade > 27:
+                self.__print_and_mem("As required. You passed.")
+            elif grade >= 18:
+                self.__print_and_mem("You passed. Get out. The cauldron is not for you.")
+            elif grade < 18:
+                self.__print_and_mem("You failed. Get out. The cauldron is not for you.")
 
 
 if __name__ == "__main__":
