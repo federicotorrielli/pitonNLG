@@ -1,17 +1,25 @@
 import markovify
+from pathlib import Path
 
 
 class NaturalLanguageGenerator:
-    def __init__(self, corpus_path: str = '', sentence: str = ''):
-        if corpus_path != '':
-            self.text = self.read_text_file(corpus_path)
-        else:
-            self.text = sentence
+    def __init__(self, sentiment: str, corpus_path=False):
+        self.sentiment = sentiment
+        self.text = self.read_text_file(corpus_path)
         self.text_model = markovify.Text(self.text)
 
-    def read_text_file(self, corpus_path: str):
-        with open(corpus_path, 'r') as f:
-            return f.read()
+    def read_text_file(self, corpus_path: bool) -> str:
+        if corpus_path:
+            paths = [p for p in Path('.').glob('questions/*.txt')]
+            final_path = [p for p in paths if self.sentiment in p.name][0]
+        else:
+            paths = [p for p in Path('.').glob('fillers/*.txt')]
+            final_path = [p for p in paths if self.sentiment in p.name][0]
+        text = ''
+        f = final_path.open('r')
+        text += f.read()
+        f.close()
+        return text
 
     def generate_sentence(self) -> str:
         generated_sentence = self.text_model.make_sentence(tries=100)
@@ -22,5 +30,5 @@ class NaturalLanguageGenerator:
 
 
 if __name__ == '__main__':
-    nlg = NaturalLanguageGenerator(corpus_path='corpus_potion_questions_happy.txt')
+    nlg = NaturalLanguageGenerator(False)
     print(nlg.generate_sentence())

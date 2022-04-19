@@ -21,14 +21,12 @@ class DialogueManager:
     - It has to keep memory of the previous phrases told to the DM
     """
 
-    # TODO: generazione ending e voto...
-
-    def __init__(self, max_turns=15):
-        self.max_turns = max_turns
+    def __init__(self):
         self.analized_phrase: analisys.PhraseAnalisys = None
         self.current_answer = None
         self.potions = [polyjuice_potion, invisibility_potion, forgetfulness_potion]
         self.current_potion = random.choice(self.potions)
+        self.max_turns = len(self.current_potion.ingredients) * 2
         self.memory = []
         self.user_memory = []
         self.current_frame = frame.Frame(self.current_potion, [])
@@ -41,9 +39,8 @@ class DialogueManager:
         self.trabocchetto = {"neutral": 0.5, "happy": 0.2, "angry": 0.7}
         self.turn = 1
         # TODO fare check sullo stato mentale e assegnarli il corretto .txt per generare
-        self.nlg_questions = language_generator.NaturalLanguageGenerator(
-            corpus_path="corpus_potion_questions_angry.txt")
-        self.nlg_fillers = language_generator.NaturalLanguageGenerator(corpus_path="corpus_filler_phrases.txt")
+        self.nlg_questions = language_generator.NaturalLanguageGenerator(self.current_mental_state, corpus_path=True)
+        self.nlg_fillers = language_generator.NaturalLanguageGenerator(self.current_mental_state, corpus_path=False)
 
     def flow(self) -> None:
         """
@@ -132,8 +129,8 @@ class DialogueManager:
             t = self.turn / len(self.current_frame.potion.ingredients)
             p = len(self.current_frame.error_ingredients) + (
                     len(self.current_frame.external_ingredients) + self.current_frame.wrongnumber) / 2 + (3 * t - 3)
-            alpha = 1 if self.current_mental_state == "neutral" else (
-                0.75 if self.current_mental_state == "happy" else 1.5)
+            alpha = 1.5 if self.current_mental_state == "neutral" else (
+                1.0 if self.current_mental_state == "happy" else 2)
             grade = math.floor(31 - alpha * p)
             self.__print_and_mem(f"Your grade is {grade}...")
             self.generate_comment(grade)
@@ -189,7 +186,7 @@ class DialogueManager:
         It's either a question or a statement (filler).
         :return: the generated phrase
         """
-        self.current_frame.debug()  # TODO: remove
+        # self.current_frame.debug()
         choice = random.uniform(0, 1)
         if choice < self.hint[self.current_mental_state]:
             return self.generate_hint_question()
@@ -202,6 +199,13 @@ class DialogueManager:
         :return: the hint question
         """
         generated_phrase = self.nlg_questions.generate_sentence()
+        temp_counter = 0
+        for ingredient in useful_words:
+            # If there's more than one ingredient, regenerate the sentence
+            if ingredient.lower() in generated_phrase.lower():
+                temp_counter += 1
+            if temp_counter > 1:
+                return self.generate_hint_question()
         phrase_validity = False
         phrase_ingredient = False
         current_ingredient = ""

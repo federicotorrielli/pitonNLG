@@ -23,7 +23,9 @@ class Frame:
         print(f"Potion Ingredients: {self.potion.ingredients}")
         print(f"Errors: {self.error_ingredients}")
         print(f"External Ingredients: {self.external_ingredients}")
-        print(f"Is complete: {self.is_complete}" + str(len(self.ingredients) + len(self.error_ingredients)) + "==" + str(len(self.potion.ingredients)))
+        print(
+            f"Is complete: {self.is_complete}" + str(len(self.ingredients) + len(self.error_ingredients)) + "==" + str(
+                len(self.potion.ingredients)))
         print(f"Is correct: {self.is_correct}")
         print(f"Number of op made: {self.number_of_operations_made}")
         print(f"Wrong number: {self.wrongnumber}")
@@ -37,15 +39,18 @@ class Frame:
                     else:
                         self.error_ingredients.add(ingredient)
                 else:
-                    if self.inflect.singular_noun(ingredient) in self.potion.ingredients or self.inflect.plural_noun(ingredient) in self.potion.ingredients:
-                        self.ingredients.add(ingredient)
+                    if self.inflect.singular_noun(ingredient) in self.potion.ingredients:
+                        self.ingredients.add(self.inflect.singular_noun(ingredient))
                         self.wrongnumber += 1
-                    else:    
+                    elif self.inflect.plural_noun(ingredient) in self.potion.ingredients:
+                        self.ingredients.add(self.inflect.plural_noun(ingredient))
+                        self.wrongnumber += 1
+                    else:
                         if positive[count]:
                             self.external_ingredients.add(ingredient)
             self.number_of_operations_made += 1
 
     def check_complete(self) -> bool:
-        if len(self.ingredients) + len(self.error_ingredients) + len(self.external_ingredients) == len(self.potion.ingredients):
+        if len(self.ingredients) + len(self.error_ingredients) == len(self.potion.ingredients):
             self.is_complete = True
         return self.is_complete
