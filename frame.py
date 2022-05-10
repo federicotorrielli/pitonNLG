@@ -1,4 +1,6 @@
-import potion, inflect
+import inflect
+
+import potion
 
 
 class Frame:
@@ -18,7 +20,11 @@ class Frame:
     def __str__(self) -> str:
         return f"{self.potion.name} {self.ingredients}"
 
-    def debug(self):
+    def debug(self) -> None:
+        """
+        Print the frame ingredients and error ingredients.
+        :return: None
+        """
         print(f"Frame name:{self.potion.name}= [{self.ingredients}]")
         print(f"Potion Ingredients: {self.potion.ingredients}")
         print(f"Errors: {self.error_ingredients}")
@@ -30,7 +36,18 @@ class Frame:
         print(f"Number of op made: {self.number_of_operations_made}")
         print(f"Wrong number: {self.wrongnumber}")
 
-    def add_ingredients(self, ingredients: set, positive: [bool]):
+    def add_ingredients(self, ingredients: set, positive: [bool]) -> None:
+        """
+        Add ingredients to the frame.
+        An ingredient is added to the frame if:
+        - It is not already in the frame
+        - It is part of the potion ingredients (ingredients list), else it is added to the error list
+        We also check if the ingredient added is wrongly plural or singular. In that case, we add the correct
+        inflection but we count it as an error made.
+        :param ingredients: set of ingredients to add
+        :param positive: list of boolean, True if the ingredient is correct (positive phrase), False if it is wrong
+        :return: None
+        """
         if not self.check_complete():
             for count, ingredient in enumerate(ingredients):
                 if ingredient in self.potion.ingredients:
@@ -51,6 +68,11 @@ class Frame:
             self.number_of_operations_made += 1
 
     def check_complete(self) -> bool:
+        """
+        Check if the frame is complete.
+        The frame is complete if it contains all the potion ingredients, even if they are in the error list.
+        :return: True if the frame is complete, False otherwise
+        """
         if len(self.ingredients) + len(self.error_ingredients) == len(self.potion.ingredients):
             self.is_complete = True
         return self.is_complete

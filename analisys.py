@@ -1,5 +1,6 @@
 import spacy
 from thefuzz import fuzz
+
 from knowledge_base import *
 
 
@@ -54,6 +55,12 @@ class PhraseAnalisys:
         return self.is_question
 
     def check_polarity(self) -> bool:
+        """
+        Check if the phrase is positive or negative based on the POS tags.
+        An example of a positive phrase is: "I like pizza"
+        An example of a negative phrase is: "I don't like pizza"
+        :return: True if the phrase is positive, False otherwise
+        """
         self.polarity = True
         for m in self.doc.to_json()["tokens"]:
             if m['morph'] == "Polarity=Neg" or m['dep'] == 'neg':

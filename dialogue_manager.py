@@ -1,11 +1,12 @@
+import math
 import random
+
+from colored import fg, stylize
 
 import analisys
 import frame
-import math
 import language_generator
 from knowledge_base import *
-from colored import fg, stylize
 
 
 class DialogueManager:
@@ -38,7 +39,6 @@ class DialogueManager:
         self.hint = {"neutral": 0.5, "happy": 0.8, "angry": 0.2}
         self.trabocchetto = {"neutral": 0.5, "happy": 0.2, "angry": 0.7}
         self.turn = 1
-        # TODO fare check sullo stato mentale e assegnarli il corretto .txt per generare
         self.nlg_questions = language_generator.NaturalLanguageGenerator(self.current_mental_state, corpus_path=True)
         self.nlg_fillers = language_generator.NaturalLanguageGenerator(self.current_mental_state, corpus_path=False)
 
@@ -52,6 +52,7 @@ class DialogueManager:
         while not self.check_ending_condition():
             self.questions()
             self.wait_for_user_input()
+            self.check_for_mood_change()
             self.turn += 1
         self.end()
 
@@ -282,6 +283,27 @@ class DialogueManager:
                 self.__print_and_mem("You passed. Get out. The cauldron is not for you.")
             elif grade < 18:
                 self.__print_and_mem("You failed. Get out. The cauldron is not for you.")
+
+    def check_for_mood_change(self) -> None:
+        """
+        Change the current mental state (taken from the current_frame) of Piton if
+        one of the following conditions is met:
+        - Piton is happy and number_of_operations_made is greater than or equal to 10 --> neutral
+        - Piton is neutral and number_of_operations_made is greater than or equal to 5 --> angry
+        - Piton is happy and wrongnumber is greater than or equal to 3 --> angry
+        - Piton is neutral and wrongnumber is greater than or equal to 2 --> angry
+        :return: None
+        """
+        if self.current_mental_state == "happy":
+            if self.current_frame.number_of_operations_made >= 10:
+                self.current_mental_state = "neutral"
+            if self.current_frame.wrongnumber >= 3:
+                self.current_mental_state = "angry"
+        elif self.current_mental_state == "neutral":
+            if self.current_frame.number_of_operations_made >= 5:
+                self.current_mental_state = "angry"
+            if self.current_frame.wrongnumber >= 2:
+                self.current_mental_state = "angry"
 
 
 if __name__ == "__main__":

@@ -37,10 +37,3 @@ class Potion:
 
     def set_name(self, name: str):
         self.name = name
-
-    def get_missing_ingredients(self, proposed_ingredients: [str]) -> [str]:
-        missing_ingredients = []
-        for ingredient in self.ingredients:
-            if ingredient not in proposed_ingredients:
-                missing_ingredients.append(ingredient)
-        return missing_ingredients
