@@ -288,22 +288,39 @@ class DialogueManager:
         """
         Change the current mental state (taken from the current_frame) of Piton if
         one of the following conditions is met:
-        - Piton is happy and number_of_operations_made is greater than or equal to 10 --> neutral
-        - Piton is neutral and number_of_operations_made is greater than or equal to 5 --> angry
-        - Piton is happy and wrongnumber is greater than or equal to 3 --> angry
-        - Piton is neutral and wrongnumber is greater than or equal to 2 --> angry
+        - Piton is happy and the number of operations made is greater then the potions ingredients number and the errors
+          are greater than one --> neutral
+        - Piton is happy and the number of operations made is greater then the potions ingredients number and the errors
+          are equal to the potions ingredients number (he got everything wrong) --> angry
+        - Piton is neutral and he got right at least half of the potion's ingredients without
+          making an error --> happy
+        - Piton is neutral and he got (rightly or wrongly) at least half of the potion's ingredients and the sum
+          of errors are at least half of the potions ingredients number --> angry
+        - Piton is angry and he did nothing wrong --> neutral
         :return: None
         """
         if self.current_mental_state == "happy":
-            if self.current_frame.number_of_operations_made >= 10:
+            if self.turn >= len(self.current_frame.potion.ingredients) \
+                    and len(self.current_frame.error_ingredients) + len(self.current_frame.external_ingredients) > 1:
                 self.current_mental_state = "neutral"
-            if self.current_frame.wrongnumber >= 3:
+            elif self.turn >= len(self.current_frame.potion.ingredients) and \
+                    len(self.current_frame.error_ingredients) + len(self.current_frame.external_ingredients) == \
+                    len(self.current_frame.potion.ingredients):
                 self.current_mental_state = "angry"
+
         elif self.current_mental_state == "neutral":
-            if self.current_frame.number_of_operations_made >= 5:
+            if (len(self.current_frame.ingredients) * 2) > len(self.current_frame.potion.ingredients) + 1 and \
+                    len(self.current_frame.error_ingredients) + len(self.current_frame.external_ingredients) == 0:
+                self.current_mental_state = "happy"
+            elif (self.turn * 2) > len(self.current_frame.potion.ingredients) + 1 and \
+                    len(self.current_frame.error_ingredients) + len(self.current_frame.external_ingredients) \
+                    >= len(self.current_frame.potion.ingredients) / 2:
                 self.current_mental_state = "angry"
-            if self.current_frame.wrongnumber >= 2:
-                self.current_mental_state = "angry"
+
+        else:
+            if (len(self.current_frame.ingredients) + 1) == len(self.current_frame.potion.ingredients) and \
+                    len(self.current_frame.error_ingredients) + len(self.current_frame.external_ingredients) == 0:
+                self.current_mental_state = "neutral"
 
 
 if __name__ == "__main__":
