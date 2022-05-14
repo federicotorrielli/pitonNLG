@@ -33,8 +33,6 @@ class DialogueManager:
         self.current_frame = frame.Frame(self.current_potion, [])
         self.current_state = "intro"
         self.current_mental_state = random.choices(["neutral", "happy", "angry"], weights=[0.2, 0.1, 0.7])[0]
-        self.current_color_for_mental_state = "blue" if self.current_mental_state == "neutral" else "green" \
-            if self.current_mental_state == "happy" else "red"
         self.__ingredient = ""
         self.hint = {"neutral": 0.5, "happy": 0.8, "angry": 0.2}
         self.trabocchetto = {"neutral": 0.5, "happy": 0.2, "angry": 0.7}
@@ -88,7 +86,9 @@ class DialogueManager:
         """
         Print the phrase and memorize it
         """
-        print(stylize(phrase, fg(self.current_color_for_mental_state)))
+        current_color = "blue" if self.current_mental_state == "neutral" else "green" \
+            if self.current_mental_state == "happy" else "red"
+        print(stylize(phrase, fg(current_color)))
         if user:
             self.user_memory.append(phrase)
         else:
