@@ -1,0 +1,23 @@
+\documentclass{Academic}
+\usepackage{import}
+
+\begin{document}
+%Easy customisation of title page
+%TC:ignore
+\myabstract{\include{abstract}}
+\renewcommand{\myTitle}{Piton Dialogue System in Python3}
+\renewcommand{\MyAuthor}{Sciandra Lorenzo, Torrielli Federico, Staffieri Michele}
+\renewcommand{\MyDepartment}{Dipartimento di Inofrmatica}
+\renewcommand{\ID}{859704, 858839, 869241}
+\renewcommand{\Keywords}{Dialogue, NLP, python}
+\maketitle
+%\vspace{-1.9em}\noindent\rule{\textwidth}{1pt} %add this line if not using abstract
+\onehalfspacing
+%TC:endignore
+
+\import{Sections/}{sec1.tex}
+\import{Sections/}{sec2.tex}
+\import{Sections/}{sec3.tex}
+
+\printbibliography
+\end{document}

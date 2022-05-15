@@ -1,0 +1,60 @@
+\section{Introduzione}
+
+\subsection{Motivazioni}
+Una delle parti più interessanti quando viene al \textit{Natural Language Processing} è sicuramente la generazione del linguaggio. In questo progetto abbiamo voluto dare il nostro personale contributo al ramo della generazione utilizzando la conoscenza del corso e delle risorse ritenute da noi interessanti.
+\\
+Nonostante il problema fosse tutt'altro che facile e realizzabile da moltissimi lati, si è voluta dare un'impronta innovativa aggiungendo una sorta di personalità e rendendo quanto più umano il personaggio di Piton.
+
+\subsection{Installazione ed utilizzo}
+Il progetto è disponibile a \href{https://github.com/federicotorrielli/pitonNLG}{questo link}. Qui in seguito, le istruzioni per installarlo e testarlo su una macchina basata su sistema Unix (Linux e MacOS like).
+\\
+Da terminale, dopo aver scaricato ed estratto il progetto, eseguire i seguenti comandi nella cartella:
+\lstset{
+  language=bash,
+  basicstyle=\ttfamily
+}
+\begin{lstlisting}
+python3 -m pip install -r requirements.txt
+spacy download en_core_web_md
+python3 dialogue_manager.py
+\end{lstlisting}
+Nel caso in cui il comando python3 non esistesse, cambiare tutte le occorrenze di python3 con python (senza il 3).
+
+\subsection{Struttura del documento}
+In questa subsezione andremo a trattare della struttura del progetto. Per comodità, abbiamo diviso le sezioni nella maniera seguente:
+\begin{itemize}
+    \item Introduzione: sguardo generale al progetto, frame, scelte implementative particolari, knowledge base
+    \item Analisi del linguaggio
+    \item Dialogue Manager
+    \item Generazione del linguaggio
+    \item Conclusione e risultati
+\end{itemize}
+
+\subsection{Articolazione del discorso}
+L'assistente in questione è Piton, ovvero il professore di Pozioni alla scuola di magia di Hogwards. Si è all'interrogazione dell'esame finale del corso: per comodità gli argomenti sono stati ristretti alla conoscenza di tre pozioni. Il flow del discorso procede nel modo seguente:
+\begin{itemize}
+    \item Il professore ha l'iniziativa: può fare domande, può spronare a continuare
+    \item L'unico scopo dello studente è rispondere correttamente alle domande, ed andare avanti quanto più autonomamente possibile
+    \item Il professore da, alla fine dell'interrogazione, una votazione ed un commento informativo
+\end{itemize}
+Viene rispettato, per quanto possibile, la personalità dell'assistente. Piton è un personaggio (apparentemente) egocentrico: non è particolarmente d'aiuto allo studente, se non in rari casi. Nelle sezioni successive verrà mostrato come è stato possibile codificare la sua personalità.
+
+\subsection{Struttura del codice}
+Il codice, per come è stato strutturato, viene diviso più o meno nelle sezioni appena trattate. Le classi di maggiore importanza sono \texttt{analisys.py}, \texttt{dialogue\_manager.py}, \texttt{language\_generator.py}, le altre classi hanno funzione di utility e boilerplate code per il resto del progetto. Le loro funzioni sono auto-esplicative.
+\\
+Nel file \texttt{knowledge\_base.py} è presente la base di conoscenza del nostro progetto:
+\begin{itemize}
+    \item Le pozioni da noi scelte: pozione polisucco, invisibilità e della dimenticanza (Polyjuice, Invisibility, Forgetfulness)
+    \item Una lista di parole utili utilizzate dal programma per analizzare le frasi da considerare in un discorso
+    \item Liste di frasi da utilizzare randomicamente a seconda del mood di Piton
+\end{itemize}
+Il programma è \textbf{Frame-based}, ovvero si basa su della conoscenza condivisa. Man mano che si va avanti nel discorso, il frame si riempie di informazioni utili (o meno) che il programma utilizza per generare frasi diverse o per cambiare la sua personalità. Il Frame contiene di base due informazioni \textbf{la pozione di riferimento} (ovvero l'oggetto della domanda di Piton) e \textbf{la pozione in costruzione}.
+La struttura della pozione è molto semplice, essa contiene solo il suo nome e gli ingredienti che la compongono.
+\\
+Il frame contiene altre informazioni numeriche, oltre alle pozioni stesse:
+\begin{itemize}
+    \item \textit{error ingredients}: ingredienti che l'utente ha detto erroneamente
+    \item \textit{external ingredients}: ingredienti che l'utente ha detto erroneamente, ma che appartenevano ad un'altra pozione
+    \item \textit{number of operations made}: numero che indica quante iterazioni sul frame ci sono state (aggiunta e rimozione di infomazioni)
+    \item \textit{inflect}: classe che ci comunica se l'ingrediente detto è singolare e plurale. Essa ci serve perché, non avendo un numero preciso di ingredienti, dobbiamo sapere almeno se gli ingredienti sono uno o più di uno.
+\end{itemize}
