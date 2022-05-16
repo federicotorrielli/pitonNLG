@@ -86,8 +86,8 @@ class DialogueManager:
         """
         Print the phrase and memorize it
         """
-        current_color = "blue" if self.current_mental_state == "neutral" else "green" \
-            if self.current_mental_state == "happy" else "red"
+        current_color = "light_blue" if self.current_mental_state == "neutral" else "green" \
+            if self.current_mental_state == "happy" else "light_red"
         print(stylize(phrase, fg(current_color)))
         if user:
             self.user_memory.append(phrase)
