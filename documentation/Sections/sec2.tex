@@ -4,8 +4,13 @@ La classe \texttt{PhraseAnalisys.py} è incaricata dell'analisi delle frasi.
 Presa in input una frase, il metodo \texttt{correct\_phrase} grazie ad una fuzzy correction rimpiazza e corregge le parole che presentano eventiali errori di battitura, la cosa ci interessa particolarmente poichè non vogliamo perdere parole chiave che saranno utili in seguito.
 A partire dalla frase corretta  utilizziamo spacy che, presa in input l'intera frase restituisce l'albero delle dipendeze tra le parole, quindi tutti i tag del part-of-speech e delle dipendenze semantiche, oltre ad altre informazioni utili come la polarità e la presenza di interrogazioni. Sulla base di questo albero analizzeremo vari aspetti delle frasi. L'analisi viene effettuata su ogni frase data in input eseguito dall'utente, in questo caso lo studente interrogato da Piton.
 
+
 \subsection{Esempio di analisi di una frase con spacy}
-AGGIUNGERE SCREENSHOT
+\begin{figure}[!htb]
+    \centering
+    \includegraphics[width=16cm]{Images/imgSpacy.png}
+\end{figure}
+Come si vede dall'immagine, spacy costruisce l'albero delle relazioni sintattiche, ogni arco è etichettato con il tipo di relazione che vi è tra le parole.
 \subsection{Come sfruttiamo l'albero delle dipendenze}
 A partire dall'albero ottenuto con spacy andiamo a ricercare quattro caratteristiche della frase:
 \begin{itemize}
@@ -19,9 +24,9 @@ Per verificare se la frase sia o meno una domanda usiamo il metodo check\_if\_qu
 \subsection{Frasi utili}
 La verifica dell'utilità di una frase avviene nell metodo check\_if\_usefull, qui percorriamo tutta la frase e se troviamo parole utili  marchiamo la frase come useful e aggiungiamo le parole utili ad una lista. La lista delle parole utili che cerchiamo all'interno di una frase è contenuta nella knoledge\_base e contiene gli ingredienti. Se un ingrediente è formato da più parole come "valerian spring", "mistletoe berry" o  "standard ingredient" analizziamo l'albero delle dipendenze per riconoscerle, per gli ingredienti nelle pozioni analizzate abbiamo riconosciuto tre tipi diversi di relazioni tra le parole:
 \begin{itemize}
-    \item relazione amod;
-    \item relazione poss;
-    \item relazione compound;
+    \item relazione amod: modificatore aggettivale
+    \item relazione poss: relazioni possessive;
+    \item relazione compound: nomi composti;
 \end{itemize}
 Il primo caso copre ingredienti del tipo: "mistletoe berry",
 il secondo caso ingredienti del tipo: "bicorn's horn" e, il terzo, ingredienti del tipo: "lether river water"
