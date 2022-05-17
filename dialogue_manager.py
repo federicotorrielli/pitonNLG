@@ -27,7 +27,7 @@ class DialogueManager:
         self.current_answer = None
         self.potions = [polyjuice_potion, invisibility_potion, forgetfulness_potion]
         self.current_potion = random.choice(self.potions)
-        self.max_turns = len(self.current_potion.ingredients) * 2
+        self.max_turns = len(self.current_potion.ingredients) * 3
         self.memory = []
         self.user_memory = []
         self.current_frame = frame.Frame(self.current_potion, [])
@@ -86,8 +86,8 @@ class DialogueManager:
         """
         Print the phrase and memorize it
         """
-        current_color = "blue" if self.current_mental_state == "neutral" else "green" \
-            if self.current_mental_state == "happy" else "red"
+        current_color = "light_blue" if self.current_mental_state == "neutral" else "green" \
+            if self.current_mental_state == "happy" else "light_red"
         print(stylize(phrase, fg(current_color)))
         if user:
             self.user_memory.append(phrase)
@@ -163,6 +163,7 @@ class DialogueManager:
         self.current_answer = input()
         self.analized_phrase = analisys.PhraseAnalisys(self.current_answer)
         if self.current_state == "hint" or self.current_state == "trabocchino":
+            self.current_state = "not useful"
             while self.analized_phrase.yesno != "yes" and self.analized_phrase.yesno != "no":
                 print("The question is easy, YOU MUST ANSWER YES OR NO!")
                 self.current_answer = input()
@@ -189,9 +190,10 @@ class DialogueManager:
         """
         # self.current_frame.debug()
         choice = random.uniform(0, 1)
-        if choice < self.hint[self.current_mental_state]:
+        if choice < 0.33:
             return self.generate_hint_question()
         else:
+            self.current_state = "questions"
             return self.generate_filler()
 
     def generate_hint_question(self) -> str:
@@ -220,7 +222,8 @@ class DialogueManager:
                 in self.current_frame.error_ingredients:
             phrase_validity = True
         if phrase_ingredient:
-            if phrase_validity:
+            choice = random.uniform(0, 1)
+            if phrase_validity and choice < self.hint[self.current_mental_state]:
                 self.current_state = "hint"
                 self.__ingredient = current_ingredient
                 return generated_phrase
@@ -243,7 +246,7 @@ class DialogueManager:
         return self.nlg_fillers.generate_sentence()
 
     def resolve_yesno(self) -> str:
-        self.current_state = "questions"
+        self.current_state = "fill the frame"
         if self.analized_phrase.yesno == "yes":
             return f"I think that {self.__ingredient} is in the potion."
         elif self.analized_phrase.yesno == "no":

@@ -51,10 +51,10 @@ Nel file \texttt{knowledge\_base.py} è presente la base di conoscenza del nostr
 Il programma è \textbf{Frame-based}, ovvero si basa su della conoscenza condivisa. Man mano che si va avanti nel discorso, il frame si riempie di informazioni utili (o meno) che il programma utilizza per generare frasi diverse o per cambiare la sua personalità. Il Frame contiene di base due informazioni \textbf{la pozione di riferimento} (ovvero l'oggetto della domanda di Piton) e \textbf{la pozione in costruzione}.
 La struttura della pozione è molto semplice, essa contiene solo il suo nome e gli ingredienti che la compongono.
 \\
-Il frame contiene altre informazioni numeriche, oltre alle pozioni stesse:
+Il frame contiene altre informazioni, oltre alle pozioni stesse, in particolare:
 \begin{itemize}
-    \item \textit{error ingredients}: ingredienti che l'utente ha detto erroneamente
-    \item \textit{external ingredients}: ingredienti che l'utente ha detto erroneamente, ma che appartenevano ad un'altra pozione
+    \item \textit{error ingredients}: lista degli ingredienti che l'utente ha detto non appartenere alla pozione, ma invece appartengono;
+    \item \textit{external ingredients}: lista degli ingredienti che secondo l'utente appartengono alla pozione, ma invece appartengono ad altre;
     \item \textit{number of operations made}: numero che indica quante iterazioni sul frame ci sono state (aggiunta e rimozione di infomazioni)
-    \item \textit{inflect}: classe che ci comunica se l'ingrediente detto è singolare e plurale. Essa ci serve perché, non avendo un numero preciso di ingredienti, dobbiamo sapere almeno se gli ingredienti sono uno o più di uno.
+    \item \textit{wrong number}: numero degli ingredienti che l'utente ha sbagliato in numero, ossia sono ingredienti che effettivamente appartengono alla pozione, ma sono stati detti con numero diverso.
 \end{itemize}
