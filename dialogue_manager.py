@@ -162,7 +162,7 @@ class DialogueManager:
         """
         self.current_answer = input()
         self.analized_phrase = analisys.PhraseAnalisys(self.current_answer)
-        if self.current_state == "hint" or self.current_state == "trabocchino":
+        if self.current_state == "hint" or self.current_state == "trabocchetto":
             self.current_state = "not useful"
             while self.analized_phrase.yesno != "yes" and self.analized_phrase.yesno != "no":
                 print("The question is easy, YOU MUST ANSWER YES OR NO!")
@@ -234,7 +234,7 @@ class DialogueManager:
             if choice < self.trabocchetto[self.current_mental_state]:
                 return self.generate_hint_question()  # Question him again
             else:
-                self.current_state = "trabocchino"
+                self.current_state = "trabocchetto"
                 self.__ingredient = current_ingredient
                 return generated_phrase  # Trick question
 
