@@ -133,7 +133,8 @@ class DialogueManager:
             alpha = 1.5 if self.current_mental_state == "neutral" else (
                 1.0 if self.current_mental_state == "happy" else 2)
             grade = math.floor(31 - alpha * p)
-            self.__print_and_mem(f"Your grade is {grade}...")
+            if grade > 15:
+                self.__print_and_mem(f"Your grade is {grade}...")
             self.generate_comment(grade)
 
     def check_ending_condition(self) -> bool:
@@ -153,6 +154,7 @@ class DialogueManager:
             for w in ending_words:
                 if w in self.analized_phrase.tokenized_phrase:
                     not_know = True
+                    self.turn = 1000000  # We want to end the dialogue with the lowest score possible
         return not_know
 
     def wait_for_user_input(self) -> None:

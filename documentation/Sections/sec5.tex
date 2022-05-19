@@ -1,0 +1,35 @@
+\section{Conclusioni}
+\subsection{Conversazione e Mood}
+Una parte fondamentale della conversazione che si ha con un assistente è sicuramente il fatto che esso non sia \textbf{statico} nel tempo ma che riesca ad interpretare la situazione e rispondere di conseguenza.
+Questo fatto è stato codificato in PitonNLG sotto forma di \textbf{emozioni dinamiche}.
+\\
+Il metodo \texttt{check\_for\_mood\_change} ci restituisce, data la situazione corrente del nostro frame, l'emozione corretta da includere nel nostro assistente personale. L'emozione cambia totalmente il dizionario utilizzato da Piton, i voti che ci può dare e la quantità di errori che possiamo effettuare prima che l'interazione non si interrompa.
+\subsubsection{Da angry ad happy}
+\begin{figure}[!htb]
+    \centering
+    \includegraphics[scale=0.45]{Images/from_angry_to_happy.png}
+    \caption{Interazione perfetta tra un Piton angry ed un ottimo studente}
+    \label{fig:from_angry_to_happy}
+\end{figure}
+In questo primo caso possiamo notare dall'immagine \ref{fig:from_angry_to_happy} come un'interazione perfetta può trasformare anche l'emozione più bassa (angry) nella più alta (happy). Dallo stato angry, però, non potrà passare direttamente ad happy, ma dovrà avere prima un turno neutral, giusto per non renderlo esattamente uno \textit{psicopatico} (un normale umano, se non in rari casi, non passa immediatamente dalla rabbia alla gioia). 
+\subsubsection{Da happy ad angry}
+\begin{figure}[!htb]
+    \centering
+    \includegraphics[scale=0.45]{Images/from_happy_to_angry.png}
+    \caption{L'utente non sa molto: Piton passa abbastanza velocemente da essere felice ad arrabbiato}
+    \label{fig:from_happy_to_angry}
+\end{figure}
+In questo secondo caso cerchiamo di far passare Piton dall'essere felice ad essere arrabbiato: l'unica maniera ovviamente è quella di sbagliare la maggior parte delle domande e di portare l'interazione ad avere quanti più turni possibili.
+\subsubsection{Un fallimento totale}
+\begin{figure}[!htb]
+    \centering
+    \includegraphics[scale=0.40]{Images/a_complete_fail.png}
+    \caption{Un fallimento totale da parte dell'utente. Ogni risposta è errata.}
+    \label{fig:a_complete_failure}
+\end{figure}
+Come già citato in \ref{sec:3} il discorso termina immediatamente con un fallimento nel qual caso lo studente non sappia rispondere ad una domanda seriamente.
+\subsection{Possibili miglioramenti}
+\subsubsection{Nell'analisi del discorso}
+Il nostro chatBot è in grado di esaminare ed elaborare un ampio set di tipologie di risposte, domande, frasi non utili; è comunque possibile approfondire in merito e integrare tutte le possibili tipologie di risposte che un utente può porre. A tale scopo può essere utile utilizzare \textbf{reti neurali} per il riconoscimento del linguaggio.
+\subsubsection{Nella generazione del linguaggio}
+Come spiegato nei paragrafi precedenti la generazione del linguaggio avviene tramite catene di Markov, è stata già discusso il problema delle possibili frasi prive di senso o comunque non utili al nostro scopo. Può essere sicuramente utile ampliare la lista di frasi utilizzate per la generazione. Ma una possibile soluzione definitiva può essere quella di utilizzare dei \textbf{transformer} come gpt3 per generare domande e frasi filler sempre corrette e coerenti.

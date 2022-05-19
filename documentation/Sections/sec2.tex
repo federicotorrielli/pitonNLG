@@ -24,12 +24,10 @@ Per verificare se la frase sia o meno una domanda usiamo il metodo check\_if\_qu
 \subsection{Frasi utili}
 La verifica dell'utilità di una frase avviene nell metodo check\_if\_usefull, qui percorriamo tutta la frase e se troviamo parole utili  marchiamo la frase come useful e aggiungiamo le parole utili ad una lista. La lista delle parole utili che cerchiamo all'interno di una frase è contenuta nella knoledge\_base e contiene gli ingredienti. Se un ingrediente è formato da più parole come "valerian spring", "mistletoe berry" o  "standard ingredient" analizziamo l'albero delle dipendenze per riconoscerle, per gli ingredienti nelle pozioni analizzate abbiamo riconosciuto tre tipi diversi di relazioni tra le parole:
 \begin{itemize}
-    \item relazione amod: modificatore aggettivale
-    \item relazione poss: relazioni possessive;
-    \item relazione compound: nomi composti;
+    \item relazione amod: modificatore aggettivale come \textit{"mistletoe berry"};
+    \item relazione poss: relazioni possessive come \textit{"bicorn's horn"};
+    \item relazione compound: nomi composti come \textit{"lether river water"}.
 \end{itemize}
-Il primo caso copre ingredienti del tipo: "mistletoe berry",
-il secondo caso ingredienti del tipo: "bicorn's horn" e, il terzo, ingredienti del tipo: "lether river water"
 \subsection{Frasi yes/no e polarità}
 Per alcune tipologie di domande che Piton porrà allo studente sarà richiesta una risposta di tipo yes/no per riconoscere queste frasi il metodo check\_yesno verifica se la frase inizia con yes o con no o se non contiene affatto una di queste parole, si vedrà in seguito come reagirà Piton.
 Per la polarità invece analizziamo l'albero delle dipendenze, riconosciamo polarità negativa se l'etichetta morph indica "Polarity=Neg", se l'etichetta dep indica "neg", oppure cerchiamo frasi del tipo "There are no cherries in this potion" in cui l'ingrediente è preceduto da un "no", diversamente la polarità sarà positiva
