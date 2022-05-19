@@ -293,8 +293,6 @@ class DialogueManager:
         one of the following conditions is met:
         - Piton is happy and the number of operations made is greater then the potions ingredients number and the errors
           are greater than one --> neutral
-        - Piton is happy and the number of operations made is greater then the potions ingredients number and the errors
-          are equal to the potions ingredients number (he got everything wrong) --> angry
         - Piton is neutral and he got right at least half of the potion's ingredients without
           making an error --> happy
         - Piton is neutral and he got (rightly or wrongly) at least half of the potion's ingredients and the sum
@@ -306,10 +304,6 @@ class DialogueManager:
             if self.turn >= len(self.current_frame.potion.ingredients) \
                     and len(self.current_frame.error_ingredients) + len(self.current_frame.external_ingredients) > 1:
                 self.current_mental_state = "neutral"
-            elif self.turn >= len(self.current_frame.potion.ingredients) and \
-                    len(self.current_frame.error_ingredients) + len(self.current_frame.external_ingredients) == \
-                    len(self.current_frame.potion.ingredients):
-                self.current_mental_state = "angry"
 
         elif self.current_mental_state == "neutral":
             if (len(self.current_frame.ingredients) * 2) > len(self.current_frame.potion.ingredients) + 1 and \
