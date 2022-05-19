@@ -3,14 +3,14 @@
 La classe \texttt{PhraseAnalisys.py} è incaricata dell'analisi delle frasi.
 Presa in input una frase, il metodo \texttt{correct\_phrase} grazie ad una fuzzy correction rimpiazza e corregge le parole che presentano eventiali errori di battitura, la cosa ci interessa particolarmente poichè non vogliamo perdere parole chiave che saranno utili in seguito.
 A partire dalla frase corretta  utilizziamo spacy che, presa in input l'intera frase restituisce l'albero delle dipendeze tra le parole, quindi tutti i tag del part-of-speech e delle dipendenze semantiche, oltre ad altre informazioni utili come la polarità e la presenza di interrogazioni. Sulla base di questo albero analizzeremo vari aspetti delle frasi. L'analisi viene effettuata su ogni frase data in input eseguito dall'utente, in questo caso lo studente interrogato da Piton.
-
-
 \subsection{Esempio di analisi di una frase con spacy}
-\begin{figure}[!htb]
+Come si vede dall'immagine \ref{fig:Spacy}, spacy costruisce l'albero delle relazioni sintattiche, ogni arco è etichettato con il tipo di relazione che vi è tra le parole.
+\begin{figure}[h]
     \centering
-    \includegraphics[width=16cm]{Images/imgSpacy.png}
+    \includegraphics[scale=0.45]{Images/imgSpacy.png}
+    \caption{Dependency parsing con Spacy}
+    \label{fig:Spacy}
 \end{figure}
-Come si vede dall'immagine, spacy costruisce l'albero delle relazioni sintattiche, ogni arco è etichettato con il tipo di relazione che vi è tra le parole.
 \subsection{Come sfruttiamo l'albero delle dipendenze}
 A partire dall'albero ottenuto con spacy andiamo a ricercare quattro caratteristiche della frase:
 \begin{itemize}

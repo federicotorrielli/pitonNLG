@@ -9,7 +9,7 @@ Il professor Piton è stato da noi realizzato come una sorta di automa a stati f
     \item[v)]\textbf{Hint}: stato ricorrente in cui il professore fa un suggerimento allo studente chiedendogli se un argomento della pozione sia o meno presente;
     \item[vi)]\textbf{Questions}: stato ricorrente in cui il professore fa domande standard riguardo alla pozione scelta.
 \end{itemize}
-Per una maggiore comprensione verrà di seguito proposto una schema di transizione degli stati:
+Per una maggiore comprensione verrà di seguito proposto una schema di transizione degli stati \ref{fig:Automa}.
 \begin{figure}[h]
 \centerline{\includegraphics[scale=0.4]{Images/stateTransition.png}}
 \caption{Automa di Piton, il non determinismo risiede nella generazione delle domande che sono regolate da distribuzioni di probabilità}
@@ -45,14 +45,12 @@ con $\#err$= numero degli errori, $\#ext$= numero degli ingredienti esterni, $\#
 \[
 t = \frac{\#tentativi fatti}{\# tentativi perfetti}
 \]
-\newpage
-Usiamo la funzione $y = 3x -3$ per trattare il precedente rapporto perchè ragionevole e facile da calcolare:
-\begin{figure}[h]
+Usiamo la funzione $y = 3x -3$  (\ref{fig:FunzioneVoto}) per trattare il precedente rapporto perchè ragionevole e facile da calcolare.
+\begin{figure}[ht]
 \centerline{\includegraphics[scale=0.25]{Images/3x-3.png}}
 \caption{Grafico della funzione $y = 3x -3$}
 \label{fig:FunzioneVoto}
 \end{figure}
-
 Se i tentativi sono minimi ($t=1$) non c'è penalità, se invece lo studente risponde nel doppio dei tentativi ($t=2$) togliamo 3 punti fino a 6 punti per il triplo ($t=3$) delle risposte necessarie.
 \newline
 Mettendo tutto assieme risulta:
