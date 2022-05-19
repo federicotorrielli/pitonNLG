@@ -1,4 +1,5 @@
 \section{Dialogue Manager}
+\label{sec:3}
 \subsection{State Automa}
 Il professor Piton è stato da noi realizzato come una sorta di automa a stati finiti non deterministo con coda, con i seguenti stati:
 \begin{itemize}
@@ -29,7 +30,8 @@ Piton è dotato di uno \textbf{stato mentale} scelto tra \textbf{angry}, \textbf
 Il dialogo termina se si presenta una delle seguenti condizioni:
 \begin{enumerate}
     \item La conversazione procede per un numero di turni che è 3 volte il numero di ingredienti della pozione;
-    \item Il frame viene completato e l'utente ha detto correttamente o no tutti gli ingredienti della pozione.
+    \item Il frame viene completato e l'utente ha detto correttamente o no tutti gli ingredienti della pozione;
+    \item L'utente specifica esplicitamente di non saper nulla.
 \end{enumerate}
 
 \subsection{Valutazione}
@@ -45,7 +47,7 @@ con $\#err$= numero degli errori, $\#ext$= numero degli ingredienti esterni, $\#
 \[
 t = \frac{\#tentativi fatti}{\# tentativi perfetti}
 \]
-Usiamo la funzione $y = 3x -3$  (\ref{fig:FunzioneVoto}) per trattare il precedente rapporto perchè ragionevole e facile da calcolare.
+Usiamo la funzione $y = 3t -3$  (\ref{fig:FunzioneVoto}) per trattare il precedente rapporto perchè ragionevole e facile da calcolare.
 \begin{figure}[ht]
 \centerline{\includegraphics[scale=0.25]{Images/3x-3.png}}
 \caption{Grafico della funzione $y = 3x -3$}

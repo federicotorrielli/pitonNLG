@@ -1,7 +1,7 @@
 \section{Introduzione}
 
 \subsection{Motivazioni}
-Una delle parti più interessanti quando viene al \textit{Natural Language Processing} è sicuramente la generazione del linguaggio. In questo progetto abbiamo voluto dare il nostro personale contributo al ramo della generazione utilizzando la conoscenza del corso e delle risorse ritenute da noi interessanti.
+Una delle parti più interessanti quando si parla di \textit{Natural Language Processing} sono sicuramente i sistemi di dialogo, dato una loro buona implementazione prevede ottime conoscenze sia di analisi che di generazione del linguaggio naturale. In questo progetto abbiamo voluto sperimentare utilizzando sia ciò che abbiamo imparato dal corso sia le risorse ritenute da noi interessanti.
 \\
 Nonostante il problema fosse tutt'altro che facile e realizzabile da moltissimi lati, si è voluta dare un'impronta innovativa aggiungendo una sorta di personalità e rendendo quanto più umano il personaggio di Piton.
 
@@ -23,11 +23,11 @@ Nel caso in cui il comando python3 non esistesse, cambiare tutte le occorrenze d
 \subsection{Struttura del documento}
 In questa subsezione andremo a trattare della struttura del progetto. Per comodità, abbiamo diviso le sezioni nella maniera seguente:
 \begin{itemize}
-    \item Introduzione: sguardo generale al progetto, frame, scelte implementative particolari, knowledge base
-    \item Analisi del linguaggio
-    \item Dialogue Manager
-    \item Generazione del linguaggio
-    \item Conclusione e risultati
+    \item Introduzione: sguardo generale al progetto, frame, scelte implementative particolari, knowledge base;
+    \item Analisi del linguaggio;
+    \item Dialogue Manager;
+    \item Generazione del linguaggio;
+    \item Conclusione e risultati.
 \end{itemize}
 
 \subsection{Articolazione del discorso}
@@ -48,13 +48,11 @@ Nel file \texttt{knowledge\_base.py} è presente la base di conoscenza del nostr
     \item Una lista di parole utili utilizzate dal programma per analizzare le frasi da considerare in un discorso
     \item Liste di frasi da utilizzare randomicamente a seconda del mood di Piton
 \end{itemize}
-Il programma è \textbf{Frame-based}, ovvero si basa su della conoscenza condivisa. Man mano che si va avanti nel discorso, il frame si riempie di informazioni utili (o meno) che il programma utilizza per generare frasi diverse o per cambiare la sua personalità. Il Frame contiene di base due informazioni \textbf{la pozione di riferimento} (ovvero l'oggetto della domanda di Piton) e \textbf{la pozione in costruzione}.
-La struttura della pozione è molto semplice, essa contiene solo il suo nome e gli ingredienti che la compongono.
-\\
-Il frame contiene altre informazioni, oltre alle pozioni stesse, in particolare:
+Il programma è \textbf{Frame-based}, ovvero man mano che si va avanti nel discorso, il frame si riempie di informazioni utili (o meno) che il programma utilizza per generare frasi diverse o per cambiare la sua personalità. Il Frame contiene di base due informazioni \textbf{la pozione di riferimento} (ovvero l'oggetto della domanda di Piton) e \textbf{la pozione in costruzione}.
+La struttura della pozione è molto semplice, essa contiene solo il suo nome e gli ingredienti che la compongono. Il frame contiene altre informazioni, oltre alle pozioni stesse, in particolare:
 \begin{itemize}
-    \item \textit{error ingredients}: lista degli ingredienti che l'utente ha detto non appartenere alla pozione, ma invece appartengono;
-    \item \textit{external ingredients}: lista degli ingredienti che secondo l'utente appartengono alla pozione, ma invece appartengono ad altre;
-    \item \textit{number of operations made}: numero che indica quante iterazioni sul frame ci sono state (aggiunta e rimozione di infomazioni)
-    \item \textit{wrong number}: numero degli ingredienti che l'utente ha sbagliato in numero, ossia sono ingredienti che effettivamente appartengono alla pozione, ma sono stati detti con numero diverso.
+    \item \texttt{error\_ingredients}: lista degli ingredienti che l'utente ha detto non appartenere alla pozione, ma invece appartengono;
+    \item \texttt{external\_ingredients}: lista degli ingredienti che secondo l'utente appartengono alla pozione, ma invece appartengono ad altre;
+    \item \texttt{number\_of\_operations\_made}: numero che indica quante iterazioni sul frame ci sono state;
+    \item \texttt{wrong\_number}: numero degli ingredienti che l'utente ha sbagliato in numero, ossia sono ingredienti che effettivamente appartengono alla pozione, ma sono stati detti con numero diverso.
 \end{itemize}

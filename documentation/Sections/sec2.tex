@@ -3,15 +3,14 @@
 La classe \texttt{PhraseAnalisys.py} è incaricata dell'analisi delle frasi.
 Presa in input una frase, il metodo \texttt{correct\_phrase} grazie ad una fuzzy correction rimpiazza e corregge le parole che presentano eventiali errori di battitura, la cosa ci interessa particolarmente poichè non vogliamo perdere parole chiave che saranno utili in seguito.
 A partire dalla frase corretta  utilizziamo spacy che, presa in input l'intera frase restituisce l'albero delle dipendeze tra le parole, quindi tutti i tag del part-of-speech e delle dipendenze semantiche, oltre ad altre informazioni utili come la polarità e la presenza di interrogazioni. Sulla base di questo albero analizzeremo vari aspetti delle frasi. L'analisi viene effettuata su ogni frase data in input eseguito dall'utente, in questo caso lo studente interrogato da Piton.
-\subsection{Esempio di analisi di una frase con spacy}
-Come si vede dall'immagine \ref{fig:Spacy}, spacy costruisce l'albero delle relazioni sintattiche, ogni arco è etichettato con il tipo di relazione che vi è tra le parole.
+\subsection{Come sfruttiamo l'albero delle dipendenze}
+Come si vede dall'immagine \ref{fig:Spacy}, \href{https://spacy.io/}{spacy} costruisce l'albero delle relazioni sintattiche, ogni arco è etichettato con il tipo di relazione che vi è tra le parole.
 \begin{figure}[h]
     \centering
     \includegraphics[scale=0.45]{Images/imgSpacy.png}
     \caption{Dependency parsing con Spacy}
     \label{fig:Spacy}
 \end{figure}
-\subsection{Come sfruttiamo l'albero delle dipendenze}
 A partire dall'albero ottenuto con spacy andiamo a ricercare quattro caratteristiche della frase:
 \begin{itemize}
     \item Se è una domanda;
@@ -24,13 +23,20 @@ Per verificare se la frase sia o meno una domanda usiamo il metodo check\_if\_qu
 \subsection{Frasi utili}
 La verifica dell'utilità di una frase avviene nell metodo check\_if\_usefull, qui percorriamo tutta la frase e se troviamo parole utili  marchiamo la frase come useful e aggiungiamo le parole utili ad una lista. La lista delle parole utili che cerchiamo all'interno di una frase è contenuta nella knoledge\_base e contiene gli ingredienti. Se un ingrediente è formato da più parole come "valerian spring", "mistletoe berry" o  "standard ingredient" analizziamo l'albero delle dipendenze per riconoscerle, per gli ingredienti nelle pozioni analizzate abbiamo riconosciuto tre tipi diversi di relazioni tra le parole:
 \begin{itemize}
-    \item relazione amod: modificatore aggettivale come \textit{"mistletoe berry"};
-    \item relazione poss: relazioni possessive come \textit{"bicorn's horn"};
-    \item relazione compound: nomi composti come \textit{"lether river water"}.
+    \item \textbf{amod}: modificatore aggettivale per ingredienti del tipo \textit{"mistletoe berry"};
+    \item \textbf{poss}: relazioni possessive per ingredienti come \textit{"bicorn's horn"};
+    \item \textbf{compound}: nomi composti per catturare ingredienti come \textit{"lether river water"}.
 \end{itemize}
+
 \subsection{Frasi yes/no e polarità}
-Per alcune tipologie di domande che Piton porrà allo studente sarà richiesta una risposta di tipo yes/no per riconoscere queste frasi il metodo check\_yesno verifica se la frase inizia con yes o con no o se non contiene affatto una di queste parole, si vedrà in seguito come reagirà Piton.
-Per la polarità invece analizziamo l'albero delle dipendenze, riconosciamo polarità negativa se l'etichetta morph indica "Polarity=Neg", se l'etichetta dep indica "neg", oppure cerchiamo frasi del tipo "There are no cherries in this potion" in cui l'ingrediente è preceduto da un "no", diversamente la polarità sarà positiva
+Per alcune tipologie di domande che Piton porrà allo studente sarà richiesta una risposta di tipo yes/no per riconoscere queste frasi il metodo \texttt{check\_yesno} verifica se la frase inizia con yes o con no o se non contiene affatto una di queste parole, si vedrà in seguito come reagirà Piton.
+Per la polarità invece analizziamo l'albero delle dipendenze, riconosciamo polarità negativa se:
+\begin{itemize}
+    \item[i)] l'etichetta morph indica "Polarity=Neg";
+    \item[ii)] l'etichetta dep indica "neg";
+    \item[iii)] c'è un "no" che precede gli ingredienti per frasi del tipo \textit{"There are no cherries in this potion"}.
+\end{itemize}
+Diversamente la polarità sarà positiva
 \subsection{Esempio di analisi di una frase}
 Si mostra ora un esempio di analisi di una frase.
 \begin{lstlisting}

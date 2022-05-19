@@ -4,10 +4,7 @@ Alla classe \texttt{NaturalLanguageGenerator} sono necessari solo due componenti
 In se, il codice non è difficile da leggere: sono presenti solo due metodi abbastanza auto-esplicativi: il primo per leggere le frasi da un corpus scritto ed il secondo per generarle, tenendo conto del corpus stesso.
 
 \subsection{Generazione delle frasi}
-Le frasi vengono generate utilizzando delle \textbf{catene di Markov}, avendo come input un corpora di frasi, diviso per sentimento. Per farlo, è stata usata una classe chiamata \textit{markovify}. Il funzionamento è veramente semplice: per ogni corpora viene costruita una catena di markov corrispondente, che si ripercorre per \textbf{100 volte} al fine di generare una nuova frase tenendo conto del corpus. Per differenziare la generazione, sono stati creati 6 corpus diversi: 3 per le domande (uno per sentimento) e 3 per le frasi filler (sempre uno per sentimento).
-
-\subsection{Catene di Markov}
-Per capire il funzionamento della generazione: una catena di Markov è un \textbf{processo stocastico di Markov} (ovvero, esso gode della suddetta proprietà). L'assunzione delle catene di Markov è che la probabilità congiunta dell'i-esimo stato dipenda solamente dall'i-1-esimo stato, e non da tutti gli stati precedenti concatenati.
+Le frasi vengono generate utilizzando delle \textbf{catene di Markov}, avendo come input un corpora di frasi, diviso per sentimento. Per farlo, è stata usata una classe chiamata \href{https://github.com/jsvine/markovify}{markovify}. Il funzionamento è veramente semplice: per ogni corpora viene costruita una catena di markov corrispondente, che si ripercorre per \textbf{100 volte} al fine di generare una nuova frase tenendo conto del corpus. Per differenziare la generazione, sono stati creati 6 corpus diversi: 3 per le domande (uno per sentimento) e 3 per le frasi filler (sempre uno per sentimento).
 
 \subsection{Funzionamento pratico}
 Dato il corpus giocattolo seguente, estratto dal nostro:
@@ -18,7 +15,7 @@ Dato il corpus giocattolo seguente, estratto dal nostro:
     \item Moving on. Do you need to put Valerian Spring in the potion?
     \item (...)
 \end{itemize}
-La catena di Markov estrae componenti che si ripetono spesso nelle frasi ed effettivamente li mischia, generando delle frasi del tipo: \textit{Is there Chicken in the potion? You can't make mistakes a this point of the exam.} oppure \textit{Moving on. Do you need to put Fluxweed in the potion? You have 2 seconds to think about it.}.
+La catena di Markov estrae componenti che si ripetono spesso nelle frasi ed effettivamente li mischia, generando delle frasi del tipo: \textit{"Is there Chicken in the potion? You can't make mistakes a this point of the exam."} oppure \textit{"Moving on. Do you need to put Fluxweed in the potion? You have 2 seconds to think about it."}.
 
 \subsection{Errori di generazione}
-Ovviamente, più le frasi si somigliano, più sarà facile generare una frase di senso compiuto (dato che nella generazione non facciamo ragionamento di tipo semantico, ci possiamo aspettare molto spesso delle frasi senza un senso logico), del tipo: \textit{What more can you tell me more ingredients.} dato che dopo \textit{What more can you tell} solitamente viene una frase con \textit{"about"}, mentre esiste anche la frase \textit{can you tell me more ingredients?}.
+Ovviamente, più le frasi si somigliano, più sarà facile generare una frase di senso compiuto (dato che nella generazione non facciamo ragionamento di tipo semantico, ci possiamo aspettare molto spesso delle frasi senza un senso logico), del tipo: \textit{"What more can you tell me more ingredients."} dato che dopo \textit{"What more can you tell"} solitamente viene una frase con \textit{'about'}, mentre esiste anche la frase \textit{"can you tell me more ingredients?"}.

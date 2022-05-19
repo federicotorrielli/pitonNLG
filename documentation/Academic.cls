@@ -210,7 +210,7 @@
     colorlinks=true,
     linkcolor=azure,
     filecolor=magenta,      
-    urlcolor=azure,
+    urlcolor=magenta,
     citecolor=azure,
     hypertexnames=true
 }
