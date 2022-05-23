@@ -78,10 +78,7 @@ class PhraseAnalisys:
         """
         useful = False
         for word in self.tokenized_phrase:
-            if word in useful_words:
-                useful = True
-                self.useful_list.append(word)
-            elif self.dependency_tree()[word][
+            if self.dependency_tree()[word][
                 0] == "amod" and f"{word} {self.dependency_tree()[word][1]}" in useful_words:
                 useful = True
                 self.useful_list.append(f"{word} {self.dependency_tree()[word][1]}")
@@ -98,6 +95,10 @@ class PhraseAnalisys:
                 if compound_phrase in useful_words:
                     useful = True
                     self.useful_list.append(compound_phrase)
+            elif self.dependency_tree()[word][0] == "nsubj":
+                if word in useful_words:
+                    useful = True
+                    self.useful_list.append(self.dependency_tree()[word][1])
         self.is_useful = useful
         return self.is_useful
 
@@ -134,7 +135,7 @@ class PhraseAnalisys:
 
 
 if __name__ == "__main__":
-    strin = PhraseAnalisys("I like standard ingredients")
+    strin = PhraseAnalisys("Bicorn's horn are the last one.")
     print(strin.phrase)
     from pprint import pprint
 
