@@ -21,12 +21,14 @@ A partire dall'albero ottenuto con spacy andiamo a ricercare quattro caratterist
 \subsection{Frasi interrogative}
 Per verificare se la frase sia o meno una domanda usiamo il metodo check\_if\_question in cui semplicemente verifichiamo se è presente un punto interrogativo o se la frase inizia con specifiche parole come "is", "are", "does", "do", "how" ecc...
 \subsection{Frasi utili}
-La verifica dell'utilità di una frase avviene nell metodo check\_if\_usefull, qui percorriamo tutta la frase e se troviamo parole utili  marchiamo la frase come useful e aggiungiamo le parole utili ad una lista. La lista delle parole utili che cerchiamo all'interno di una frase è contenuta nella knoledge\_base e contiene gli ingredienti. Se un ingrediente è formato da più parole come "valerian spring", "mistletoe berry" o  "standard ingredient" analizziamo l'albero delle dipendenze per riconoscerle, per gli ingredienti nelle pozioni analizzate abbiamo riconosciuto tre tipi diversi di relazioni tra le parole:
+La verifica dell'utilità di una frase avviene nel metodo check\_if\_usefull, qui percorriamo tutta la frase e analizziamo le relazioni che coinvolgono parole utili. La lista delle parole utili che cerchiamo all'interno di una frase è contenuta nella knoledge\_base e contiene tutti gli ingredienti. Se un ingrediente è formato da più parole come "valerian spring", "mistletoe berry" o  "standard ingredient" analizziamo l'albero delle dipendenze cercando delle spcifiche relazioni tra parole per riconoscerli. Per gli ingredienti nelle pozioni analizzate abbiamo riconosciuto quattro tipologie diverse di relazioni tra le parole:
 \begin{itemize}
-    \item \textbf{amod}: modificatore aggettivale per ingredienti del tipo \textit{"mistletoe berry"};
-    \item \textbf{poss}: relazioni possessive per ingredienti come \textit{"bicorn's horn"};
-    \item \textbf{compound}: nomi composti per catturare ingredienti come \textit{"lether river water"}.
+    \item \textbf{amod}: modificatore aggettivale, per ingredienti del tipo \textit{"mistletoe berry"};
+    \item \textbf{poss}: relazioni possessive, per ingredienti come \textit{"bicorn's horn"};
+    \item \textbf{compound}: nomi composti, per catturare ingredienti come \textit{"lether river water"};
+    \item \textbf{nsubj}: per i casi in cui l'ingrediente è il soggetto della frase ma non copre uno dei casi precedenti, quindi ingredienti formati da una sola parola come \textit{"chicken"}, \textit{"spiders"};
 \end{itemize}
+Se una frase contiene una o più parole che soddisfano uno di questi casi la frase viene etichettata come \textbf{useful}
 
 \subsection{Frasi yes/no e polarità}
 Per alcune tipologie di domande che Piton porrà allo studente sarà richiesta una risposta di tipo yes/no per riconoscere queste frasi il metodo \texttt{check\_yesno} verifica se la frase inizia con yes o con no o se non contiene affatto una di queste parole, si vedrà in seguito come reagirà Piton.
