@@ -15,7 +15,7 @@ happy_intro_phrases = ["I hope you enjoyed my potions course.\nI saw you very co
                        "hello welcome to the potion exam,\nI've always seen you in class you "
                        "will surely be prepared, let's start with this question... "]
 angry_intro_phrases = ["Let's get this done quicky. I never saw you to my lessons, "
-                       "so I don't see how you're going to pass this exam, but will give you one try only.",
+                       "so I don't see how you're going to pass this exam, but will give you one try only!",
                        "I can recognize an unprepared student right away,"
                        "\nI'll give you a chance this time, but let's hurry..."]
 useful_words = ["cherries", "cherry", "chicken", "chickens", "spiders", "spider", "fluxweed", "fluxweeds", "knotgrass",
