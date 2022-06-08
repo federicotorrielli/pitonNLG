@@ -101,10 +101,12 @@ class PhraseAnalisys:
                     useful = True
                     self.useful_list.append(self.dependency_tree()[word][1])
             elif self.dependency_tree()[word][0] == "prep":
+                # There are chickens in the potion
                 if self.dependency_tree()[word][1] in useful_words:
                     useful = True
                     self.useful_list.append(self.dependency_tree()[word][1])
             elif self.dependency_tree()[word][0] == "acomp":
+                # The first ingredient is Fluxweed
                 if word in useful_words:
                     useful = True
                     self.useful_list.append(word)
