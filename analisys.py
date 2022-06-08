@@ -77,9 +77,10 @@ class PhraseAnalisys:
         of the potions, False otherwise
         """
         useful = False
+        # print(self.dependency_tree())
         for word in self.tokenized_phrase:
-            if self.dependency_tree()[word][
-                0] == "amod" and f"{word} {self.dependency_tree()[word][1]}" in useful_words:
+            if self.dependency_tree()[word][0] == "amod" and \
+                    f"{word} {self.dependency_tree()[word][1]}" in useful_words:
                 useful = True
                 self.useful_list.append(f"{word} {self.dependency_tree()[word][1]}")
             elif self.dependency_tree()[word][
@@ -99,6 +100,16 @@ class PhraseAnalisys:
                 if word in useful_words:
                     useful = True
                     self.useful_list.append(self.dependency_tree()[word][1])
+            elif self.dependency_tree()[word][0] == "prep":
+                if self.dependency_tree()[word][1] in useful_words:
+                    useful = True
+                    self.useful_list.append(self.dependency_tree()[word][1])
+            elif self.dependency_tree()[word][0] == "acomp":
+                if word in useful_words:
+                    useful = True
+                    self.useful_list.append(word)
+            if useful:
+                break
         self.is_useful = useful
         return self.is_useful
 
