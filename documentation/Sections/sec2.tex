@@ -1,10 +1,8 @@
 \section{Analisi del linguaggio}
-
 \subsection{Intro}
 La classe \texttt{PhraseAnalisys.py} è incaricata dell'analisi delle frasi.
-Presa in input una frase, il metodo \texttt{correct\_phrase} grazie ad una fuzzy correction rimpiazza e corregge le parole che presentano eventiali errori di battitura, la cosa ci interessa particolarmente poichè non vogliamo perdere parole chiave che saranno utili in seguito.
-A partire dalla frase corretta utilizziamo spacy che, presa in input l'intera frase restituisce l'albero delle dipendeze tra le parole, quindi tutti i tag del part-of-speech e delle dipendenze semantiche, oltre ad altre informazioni utili come la polarità e la presenza di interrogazioni. Sulla base di questo albero analizzeremo vari aspetti delle frasi. L'analisi viene effettuata su ogni frase data in input eseguito dall'utente, in questo caso lo studente interrogato da Piton.
-
+Presa in input una frase, il metodo \texttt{correct\_phrase} grazie ad una fuzzy correction rimpiazza e corregge le parole che presentano eventuali errori di battitura, la cosa ci interessa particolarmente poiché non vogliamo perdere parole chiave che saranno utili in seguito.
+A partire dalla frase corretta  utilizziamo spacy che, presa in input l'intera frase restituisce l'albero delle dipendenze tra le parole, quindi tutti i tag del part-of-speech e delle dipendenze semantiche, oltre ad altre informazioni utili come la polarità e la presenza di interrogazioni. Sulla base di questo albero analizzeremo vari aspetti delle frasi. L'analisi viene effettuata su ogni frase data in input eseguito dall'utente, in questo caso lo studente interrogato da Piton.
 \subsection{Come sfruttiamo l'albero delle dipendenze}
 Come si vede dall'immagine \ref{fig:Spacy}, \href{https://spacy.io/}{spacy} costruisce l'albero delle relazioni sintattiche, ogni arco è etichettato con il tipo di relazione che vi è tra le parole.
 \begin{figure}[h]
@@ -16,16 +14,14 @@ Come si vede dall'immagine \ref{fig:Spacy}, \href{https://spacy.io/}{spacy} cost
 A partire dall'albero ottenuto con spacy andiamo a ricercare quattro caratteristiche della frase:
 \begin{itemize}
     \item Se è una domanda;
-    \item Se è utile: cioè se la frase contiene ingredienti (in caso di utilità/non utilità verrà processata diversamente come si verdà in seguito);
+    \item Se è utile: cioè se la frase contiene ingredienti (in caso di utilità/non utilità verrà processata diversamente come si vedrà in seguito);
     \item Se contiene le parole yes/no;
     \item La sua polarità, cioè se è una frase affermativa o negativa;
 \end{itemize}
-
 \subsection{Frasi interrogative}
 Per verificare se la frase sia o meno una domanda usiamo il metodo check\_if\_question in cui semplicemente verifichiamo se è presente un punto interrogativo o se la frase inizia con specifiche parole come "is", "are", "does", "do", "how" ecc...
-
 \subsection{Frasi utili}
-La verifica dell'utilità di una frase avviene nel metodo check\_if\_usefull, qui percorriamo tutta la frase e analizziamo le relazioni che coinvolgono parole utili. La lista delle parole utili che cerchiamo all'interno di una frase è contenuta nella knoledge\_base e contiene tutti gli ingredienti. Se un ingrediente è formato da più parole come "valerian spring", "mistletoe berry" o  "standard ingredient" analizziamo l'albero delle dipendenze cercando delle spcifiche relazioni tra parole per riconoscerli. Per gli ingredienti nelle pozioni analizzate abbiamo riconosciuto quattro tipologie diverse di relazioni tra le parole:
+La verifica dell'utilità di una frase avviene nel metodo check\_if\_useful, qui percorriamo tutta la frase e analizziamo le relazioni che coinvolgono parole utili. La lista delle parole utili che cerchiamo all'interno di una frase è contenuta nella knowledge\_base e contiene tutti gli ingredienti. Se un ingrediente è formato da più parole come "valerian spring", "mistletoe berry" o  "standard ingredient" analizziamo l'albero delle dipendenze cercando delle specifiche relazioni tra parole per riconoscerli. Per gli ingredienti nelle pozioni analizzate abbiamo riconosciuto quattro tipologie diverse di relazioni tra le parole:
 \begin{itemize}
     \item \textbf{amod}: modificatore aggettivale, per ingredienti del tipo \textit{"mistletoe berry"};
     \item \textbf{poss}: relazioni possessive, per ingredienti come \textit{"bicorn's horn"};
@@ -45,7 +41,6 @@ Per la polarità invece analizziamo l'albero delle dipendenze, riconosciamo pola
     \item[iii)] c'è un "no" che precede gli ingredienti per frasi del tipo \textit{"There are no cherries in this potion"}.
 \end{itemize}
 Diversamente la polarità sarà positiva
-
 \subsection{Esempio di analisi di una frase}
 Si mostra ora un esempio di analisi di una frase.
 \begin{lstlisting}
