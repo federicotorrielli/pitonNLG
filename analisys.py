@@ -1,4 +1,5 @@
 import spacy
+from profanity_check import predict
 from thefuzz import fuzz
 
 from knowledge_base import *
@@ -78,6 +79,8 @@ class PhraseAnalisys:
         """
         useful = False
         # print(self.dependency_tree())
+        if predict([self.phrase]) == [1]:
+            return useful
         for word in self.tokenized_phrase:
             if self.dependency_tree()[word][0] == "amod" and \
                     f"{word} {self.dependency_tree()[word][1]}" in useful_words:
