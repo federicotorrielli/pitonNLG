@@ -105,7 +105,7 @@ class PhraseAnalisys:
                 if self.dependency_tree()[word][1] in useful_words:
                     useful = True
                     self.useful_list.append(self.dependency_tree()[word][1])
-            elif self.dependency_tree()[word][0] == "acomp":
+            elif self.dependency_tree()[word][0] == "acomp" or self.dependency_tree()[word][0] == "attr":
                 # The first ingredient is Fluxweed
                 if word in useful_words:
                     useful = True
