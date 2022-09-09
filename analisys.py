@@ -102,7 +102,7 @@ class PhraseAnalisys:
             elif self.dependency_tree()[word][0] == "nsubj":
                 if word in useful_words:
                     useful = True
-                    self.useful_list.append(self.dependency_tree()[word][1])
+                    self.useful_list.append(word)
             elif self.dependency_tree()[word][0] == "prep":
                 # There are chickens in the potion
                 if self.dependency_tree()[word][1] in useful_words:
@@ -110,6 +110,14 @@ class PhraseAnalisys:
                     self.useful_list.append(self.dependency_tree()[word][1])
             elif self.dependency_tree()[word][0] == "acomp" or self.dependency_tree()[word][0] == "attr":
                 # The first ingredient is Fluxweed
+                if word in useful_words:
+                    useful = True
+                    self.useful_list.append(word)
+            elif self.dependency_tree()[word][0] == "ROOT":
+                if word in useful_words:
+                    useful = True
+                    self.useful_list.append(word)
+            elif self.dependency_tree()[word][0] == "dobj":
                 if word in useful_words:
                     useful = True
                     self.useful_list.append(word)
@@ -139,8 +147,8 @@ class PhraseAnalisys:
 
     def check_yesno(self):
         """
-        Check if the phrase contains a yes or no question
-        :return: "yes" if the phrase contains a yes question, "no" if the phrase contains a no question, None otherwise
+        Check if the phrase contains a yes or no
+        :return: "yes" if the phrase contains a yes, "no" if the phrase contains a "no", None otherwise
         """
         if "yes" in self.tokenized_phrase:
             return "yes"
@@ -151,13 +159,12 @@ class PhraseAnalisys:
 
 
 if __name__ == "__main__":
-    strin = PhraseAnalisys("Bicorn's horn are the last one.")
+    strin = PhraseAnalisys("The last ingredients are the cherries")
     print(strin.phrase)
     from pprint import pprint
 
     pprint(strin.doc.to_json())
     pprint(strin.dependency_tree())
-    print(f"NER: {strin.ner()}")
-    print(f"Is useful: {strin.check_if_useful()}")
+    print(f"Is useful: {strin.check_if_useful()}", "Lista: ", strin.useful_list)
     print(f"Polarity: {strin.check_polarity()}")
     print(f"Is question: {strin.check_if_question()}")

@@ -1,12 +1,12 @@
 \section{Introduzione}
 
 \subsection{Motivazioni}
-Una delle parti più interessanti quando si parla di \textit{Natural Language Processing} sono sicuramente i sistemi di dialogo, dato una loro buona implementazione prevede ottime conoscenze sia di analisi che di generazione del linguaggio naturale. In questo progetto abbiamo voluto sperimentare utilizzando sia ciò che abbiamo imparato dal corso sia le risorse ritenute da noi interessanti.
+Una delle parti più interessanti quando si parla di \textit{Natural Language Processing} sono sicuramente i sistemi di dialogo, una loro buona implementazione prevede ottime conoscenze sia di analisi che di generazione del linguaggio naturale. In questo progetto abbiamo voluto sperimentare utilizzando sia ciò che abbiamo imparato dal corso sia le risorse ritenute da noi interessanti.
 \\
 Nonostante il problema fosse tutt'altro che facile e realizzabile da moltissimi lati, si è voluta dare un'impronta innovativa aggiungendo una sorta di personalità e rendendo quanto più umano il personaggio di Piton.
 
 \subsection{Installazione ed utilizzo}
-Il progetto è disponibile a \href{https://github.com/federicotorrielli/pitonNLG}{questo link}. Qui in seguito, le istruzioni per installarlo e testarlo su una macchina basata su sistema Unix (Linux e MacOS like).
+Il progetto è disponibile a \href{https://github.com/federicotorrielli/pitonNLG}{questo link}. Qui di seguito sono riportate le istruzioni per installare le librerie necessarie e testarlo su una macchina basata su sistema Unix (Linux e MacOS like).
 \\
 Da terminale, dopo aver scaricato ed estratto il progetto, eseguire i seguenti comandi nella cartella:
 \lstset{
@@ -21,38 +21,39 @@ python3 dialogue_manager.py
 Nel caso in cui il comando python3 non esistesse, cambiare tutte le occorrenze di python3 con python (senza il 3).
 
 \subsection{Struttura del documento}
-In questa subsezione andremo a trattare della struttura del progetto. Per comodità, abbiamo diviso le sezioni nella maniera seguente:
+La documentazione è divisa nelle seguenti sezioni:
 \begin{itemize}
-    \item Introduzione: sguardo generale al progetto, frame, scelte implementative particolari, knowledge base;
-    \item Analisi del linguaggio;
-    \item Dialogue Manager;
-    \item Generazione del linguaggio;
-    \item Conclusione e risultati.
+    \item \textbf{Introduzione}: sguardo generale al progetto, frame, scelte implementative particolari, knowledge base;
+    \item \textbf{Analisi del linguaggio};
+    \item \textbf{Dialogue Manager};
+    \item \textbf{Generazione del linguaggio};
+    \item \textbf{Conclusione e risultati}.
 \end{itemize}
 
-\subsection{Articolazione del discorso}
-L'assistente in questione è Piton, ovvero il professore di Pozioni alla scuola di magia di Hogwards. Si è all'interrogazione dell'esame finale del corso: per comodità gli argomenti sono stati ristretti alla conoscenza di tre pozioni. Il flow del discorso procede nel modo seguente:
+\subsection{Contesto}
+L'assistente in questione è Piton, ovvero il professore di Pozioni alla scuola di magia di Hogwards. Si è all'interrogazione dell'esame finale del corso i cui argomenti, per comodità, sono stati ristretti alla conoscenza di tre pozioni. Il flow del discorso procede nel modo seguente:
 \begin{itemize}
-    \item Il professore ha l'iniziativa: può fare domande, può spronare a continuare
-    \item L'unico scopo dello studente è rispondere correttamente alle domande, ed andare avanti quanto più autonomamente possibile
-    \item Il professore da, alla fine dell'interrogazione, una votazione ed un commento informativo
+    \item Il professore ha l'iniziativa: può fare domande, può spronare a continuare;
+    \item L'unico scopo dello studente è rispondere correttamente alle domande, ed andare avanti quanto più autonomamente possibile;
+    \item Il professore da, alla fine dell'interrogazione, una votazione ed un commento informativo.
 \end{itemize}
 Viene rispettato, per quanto possibile, la personalità dell'assistente. Piton è un personaggio (apparentemente) egocentrico: non è particolarmente d'aiuto allo studente, se non in rari casi. Nelle sezioni successive verrà mostrato come è stato possibile codificare la sua personalità.
 
 \subsection{Struttura del codice}
-Il codice, per come è stato strutturato, viene diviso più o meno nelle sezioni appena trattate. Le classi di maggiore importanza sono \texttt{analisys.py}, \texttt{dialogue\_manager.py}, \texttt{language\_generator.py}, le altre classi hanno funzione di utility e boilerplate code per il resto del progetto. Le loro funzioni sono auto-esplicative.
-\\
+Il codice, per come è stato strutturato, viene diviso più o meno nelle stesse sezioni in cui è diviso questa documentazione e che abbiamo appena accennato. I file di maggiore importanza sono \texttt{analisys.py}, \texttt{dialogue\_manager.py}, \texttt{language\_generator.py}, le altre classi hanno funzione di utility per il resto del progetto.
 Nel file \texttt{knowledge\_base.py} è presente la base di conoscenza del nostro progetto:
 \begin{itemize}
     \item Le pozioni da noi scelte: pozione polisucco, invisibilità e della dimenticanza (Polyjuice, Invisibility, Forgetfulness)
-    \item Una lista di parole utili utilizzate dal programma per analizzare le frasi da considerare in un discorso
-    \item Liste di frasi da utilizzare randomicamente a seconda del mood di Piton
+    \item Liste di parole utili utilizzate dal programma per analizzare le frasi da considerare in un discorso
 \end{itemize}
+Gli altri files verranno spiegati in seguito.
+
+\subsection{Frame}
 Il programma è \textbf{Frame-based}, ovvero man mano che si va avanti nel discorso, il frame si riempie di informazioni utili (o meno) che il programma utilizza per generare frasi diverse o per cambiare la sua personalità. Il Frame contiene di base due informazioni \textbf{la pozione di riferimento} (ovvero l'oggetto della domanda di Piton) e \textbf{la pozione in costruzione}.
-La struttura della pozione è molto semplice, essa contiene solo il suo nome e gli ingredienti che la compongono. Il frame contiene altre informazioni, oltre alle pozioni stesse, in particolare:
+La struttura della pozione è molto semplice, essa contiene solo il suo nome e gli ingredienti che la compongono. Il frame contiene altre informazioni, oltre alle pozioni, in particolare abbiamo:
 \begin{itemize}
-    \item \texttt{error\_ingredients}: lista degli ingredienti che l'utente ha detto non appartenere alla pozione, ma invece appartengono;
+    \item \texttt{error\_ingredients}: lista degli ingredienti che, secondo l'utente, non appartengono alla pozione, ma invece ci sono;
     \item \texttt{external\_ingredients}: lista degli ingredienti che secondo l'utente appartengono alla pozione, ma invece appartengono ad altre;
-    \item \texttt{number\_of\_operations\_made}: numero che indica quante iterazioni sul frame ci sono state;
+    \item \texttt{number\_of\_operations\_made}: numero che indica quante operazioni con il frame sono state eseguite;
     \item \texttt{wrong\_number}: numero degli ingredienti che l'utente ha sbagliato in numero, ossia sono ingredienti che effettivamente appartengono alla pozione, ma sono stati detti con numero diverso.
 \end{itemize}

@@ -77,10 +77,7 @@
 \setlength{\parskip}{0ex}
 
 %Word Count
-\newcommand{\quickwordcount}[1]{%
-  \immediate\write18{texcount -1 -sum=1,0,0,0,0,0,0 -merge #1.tex > #1-words}%
-  \input{#1-words}%
-}
+
 %\quickwordcount{main} - name of main.tex document (extension not required)
 %counts (text words, header words, caption words, #headers, #floats, #inlined formulae, #displayed formulae) 
 
@@ -156,7 +153,6 @@
     \end{flushleft}%
     \vskip 0em
     \vspace{0em}
-    \noindent\textnormal{\quickwordcount{_main}Words} 
     \hfill \textls[20]{Student ID:\ID}\\
     \textls[45]{\textbf{Keywords:}} {\Keywords}
     \vspace{-0.8em} %change distance from
@@ -185,17 +181,17 @@
   \SetVerticalCoffin \l_my_abstract_coffin {\l_my_width_dim} {#2}
   \renewcommand\maketitlehookd{%
   \noindent\rule{\textwidth}{1pt}\\
-  
+
   %\section*{Abstract}
   %\text{Abstract}\\
-  
+
     \mbox{}\medskip %\par
     \centering
     \TypesetCoffin \l_my_abstract_coffin\\
     \vspace{-2em}
-    
+
     \noindent\rule{\textwidth}{1pt}
-    
+
     \vspace{-1em} %move intro closer to abstract
   }
 
@@ -210,7 +206,7 @@
     colorlinks=true,
     linkcolor=azure,
     filecolor=magenta,      
-    urlcolor=magenta,
+    urlcolor=azure,
     citecolor=azure,
     hypertexnames=true
 }
@@ -274,9 +270,9 @@
   \renewcommand{\headrulewidth}{0pt}
   \renewcommand{\footrulewidth}{0pt}
   \fancyhead[L]{}
-  
 
- 
+
+
   \fancyhead[C]{}
   \fancyhead[R]{}
   \fancyfoot[L]{}
