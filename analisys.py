@@ -103,6 +103,9 @@ class PhraseAnalisys:
                 if word in useful_words:
                     useful = True
                     self.useful_list.append(word)
+                if f"{word} {self.dependency_tree()[word][1]}" in useful_words:
+                    useful = True
+                    self.useful_list.append(f"{word} {self.dependency_tree()[word][1]}")
             elif self.dependency_tree()[word][0] == "prep":
                 # There are chickens in the potion
                 if self.dependency_tree()[word][1] in useful_words:
@@ -121,6 +124,9 @@ class PhraseAnalisys:
                 if word in useful_words:
                     useful = True
                     self.useful_list.append(word)
+                if f"{self.dependency_tree()[word][1]} {word}" in useful_words:
+                    useful = True
+                    self.useful_list.append(f"{self.dependency_tree()[word][1]} {word}")
             if useful:
                 break
         self.is_useful = useful
@@ -159,7 +165,7 @@ class PhraseAnalisys:
 
 
 if __name__ == "__main__":
-    strin = PhraseAnalisys("The last ingredients are the cherries")
+    strin = PhraseAnalisys("The potion contains spiders")
     print(strin.phrase)
     from pprint import pprint
 

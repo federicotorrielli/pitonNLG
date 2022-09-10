@@ -2,7 +2,7 @@
 \subsection{Intro}
 La classe \texttt{PhraseAnalisys.py} è incaricata dell'analisi delle frasi.
 Presa in input una frase, il metodo \texttt{correct\_phrase} grazie ad una fuzzy correction rimpiazza e corregge le parole che presentano eventuali errori di battitura, la cosa ci interessa particolarmente poiché non vogliamo perdere parole chiave che saranno utili in seguito.
-A partire dalla frase corretta  utilizziamo spacy che, presa in input l'intera frase restituisce l'albero delle dipendenze tra le parole, quindi tutti i tag del part-of-speech e delle dipendenze semantiche, oltre ad altre informazioni utili come la polarità e la presenza di interrogazioni. Sulla base di questo albero analizzeremo vari aspetti delle frasi. L'analisi viene effettuata su ogni frase data in input, ogni frase prodotta dallo studente interrogato da Piton.
+A partire dalla frase corretta  utilizziamo spacy che, presa in input l'intera frase restituisce l'albero delle dipendenze tra le parole, quindi tutti i tag del part-of-speech e delle dipendenze semantiche, oltre ad altre informazioni utili come la polarità e la presenza di interrogazioni. Sulla base di questo albero analizzeremo vari aspetti delle frasi. L'analisi viene effettuata su ogni frase data in input.
 \subsection{Come sfruttiamo l'albero delle dipendenze}
 Come si vede dall'immagine \ref{fig:Spacy}, \href{https://spacy.io/}{spacy} costruisce l'albero delle relazioni sintattiche, ogni arco è etichettato con il tipo di relazione che vi è tra le parole.
 \begin{figure}[h]
@@ -24,7 +24,7 @@ Per verificare se la frase sia o meno una domanda usiamo il metodo check\_if\_qu
 La verifica dell'utilità di una frase avviene nel metodo check\_if\_useful, qui percorriamo tutta la frase e analizziamo le relazioni che coinvolgono parole utili. La lista delle parole utili che cerchiamo all'interno di una frase è contenuta nella knowledge\_base che contiene tutti gli ingredienti. Se un ingrediente è formato da più parole come "valerian spring", "mistletoe berry" o  "standard ingredient" analizziamo l'albero delle dipendenze cercando delle specifiche relazioni tra parole per riconoscerli. Per gli ingredienti nelle pozioni analizzate abbiamo riconosciuto quattro tipologie diverse di relazioni tra le parole:
 \begin{itemize}
     \item \textbf{amod}: modificatore aggettivale, per ingredienti del tipo \textit{"Standard Ingredient"};
-    \item \textbf{dobj}: se è oggetto diretto del verbo, tipo \textit{"The potion contains chicken};
+    \item \textbf{dobj}: se l'ingrediente è oggetto diretto del verbo come \textit{"The potion contains chicken"};
     \item \textbf{poss}: relazioni possessive, per ingredienti come \textit{"bicorn's horn"};
     \item \textbf{compound}: nomi composti, per catturare ingredienti come \textit{"lether river water"};
     \item \textbf{nsubj}: per i casi in cui l'ingrediente è il soggetto della frase ma non copre uno dei casi precedenti, quindi ingredienti formati da una sola parola come \textit{"chicken"}, \textit{"spiders"};
