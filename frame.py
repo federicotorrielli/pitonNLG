@@ -53,19 +53,24 @@ class Frame:
                 if ingredient in self.potion.ingredients:
                     if positive[count]:
                         self.ingredients.add(ingredient)
+                        self.number_of_operations_made += 1
                     else:
                         self.error_ingredients.add(ingredient)
+                        self.number_of_operations_made += 1
                 else:
                     if self.inflect.singular_noun(ingredient) in self.potion.ingredients:
                         self.ingredients.add(self.inflect.singular_noun(ingredient))
                         self.wrongnumber += 1
+                        self.number_of_operations_made += 1
                     elif self.inflect.plural_noun(ingredient) in self.potion.ingredients:
                         self.ingredients.add(self.inflect.plural_noun(ingredient))
                         self.wrongnumber += 1
+                        self.number_of_operations_made += 1
                     else:
                         if positive[count]:
                             self.external_ingredients.add(ingredient)
-            self.number_of_operations_made += 1
+                            self.number_of_operations_made += 1
+            
 
     def check_complete(self) -> bool:
         """

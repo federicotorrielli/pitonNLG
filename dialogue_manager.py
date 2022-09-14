@@ -153,7 +153,7 @@ class DialogueManager:
             for w in ending_words:
                 if w in self.analized_phrase.tokenized_phrase:
                     not_know = True
-                    self.turn = 1000000  # We want to end the dialogue with the lowest score possible
+                    self.turn = self.max_turns  # We want to end the dialogue with the lowest score possible
         return not_know
     
     def questions(self) -> None:
@@ -246,9 +246,9 @@ class DialogueManager:
         :return: None
         """
         if self.max_turns == self.turn:
-            print("Time is up, student. I will see you the next time. You did not pass the test.")
+            print("I will see you the next time. You did not pass the test.")
         else:
-            t = self.turn / len(self.current_frame.potion.ingredients)
+            t = self.current_frame.number_of_operations_made / len(self.current_frame.potion.ingredients)
             p = len(self.current_frame.error_ingredients) + (
                     len(self.current_frame.external_ingredients) + self.current_frame.wrongnumber) / 2 + (3 * t - 3)
             alpha = 1.5 if self.current_mental_state == "neutral" else (
